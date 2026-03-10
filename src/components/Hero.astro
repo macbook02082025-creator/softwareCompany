@@ -1,0 +1,155 @@
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-3d"></canvas>
+  <div class="hero-wrap">
+    <div class="hero-lc">
+      <div class="hero-label rv" style="display:inline-flex;align-items:center;gap:.7rem;padding:.32rem .9rem .32rem .4rem;background:rgba(0,255,209,.04);border:1px solid rgba(0,255,209,.1);border-radius:100px;margin-bottom:2rem;">
+        <div style="width:22px;height:22px;border-radius:50%;background:rgba(0,255,209,.1);display:flex;align-items:center;justify-content:center;"><div style="width:8px;height:8px;border-radius:50%;background:var(--c1);box-shadow:0 0 10px var(--c1);animation:ldp 2s infinite;"></div></div>
+        <span style="font-family:var(--fm);font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--c1);">Elite Software Engineering Studio</span>
+      </div>
+      <h1 class="hero-h">
+        <span class="hline"><span class="hspan c1" id="hl1">BUILDING</span></span>
+        <span class="hline"><span class="hspan c2" id="hl2">TOMORROW'S</span></span>
+        <span class="hline"><span class="hspan c3" id="hl3">PRODUCTS</span></span>
+      </h1>
+      <p class="hero-sub" id="hsub">We engineer transformative digital products — AI-native platforms, real-time infrastructure, and immersive experiences built to reshape industries and outlast trends.</p>
+      <div class="hero-btns" id="hbtns">
+        <a href="#work" class="pbtn"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Explore Work</a>
+        <a href="#process" class="gbtn"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>How We Build</a>
+      </div>
+      <div class="hero-kpi" id="hkpi">
+        <div class="kpi-item"><div class="kpi-n" data-c="340" data-s="+">0+</div><div class="kpi-l">Projects</div></div>
+        <div class="kpi-item"><div class="kpi-n" data-c="98" data-s="%">0%</div><div class="kpi-l">Satisfaction</div></div>
+        <div class="kpi-item"><div class="kpi-n" data-c="12" data-s="yr">0yr</div><div class="kpi-l">Experience</div></div>
+        <div class="kpi-item"><div class="kpi-n" data-c="50" data-s="+">0+</div><div class="kpi-l">Engineers</div></div>
+      </div>
+      <div class="hero-terminal" id="hterm">
+        <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><span class="term-title">nexus — build pipeline</span></div>
+        <div id="term-output"></div>
+      </div>
+      <div class="hero-live" id="hlive"><div class="ldot"></div>Actively accepting projects — Q2 2025</div>
+    </div>
+    <div class="hero-rc">
+      <canvas id="hsphere"></canvas>
+      <div class="hbadge b1"><div class="bgt">Platform Uptime</div><div class="bgv green">99.99%</div><div class="bgs">across all deployments</div></div>
+      <div class="hbadge b2"><div class="bgt">AI Models Live</div><div class="bgv purple">142+</div><div class="bgs">in production today</div></div>
+    </div>
+  </div>
+  <div class="scue"><div class="sline"><div class="sfill"></div></div><span class="slbl">Scroll</span></div>
+</section>
+
+<script>
+import * as THREE from 'three';
+
+function kickHeroAnimations(){
+  setTimeout(()=>document.querySelectorAll('.hspan').forEach(s=>s.classList.add('go')),100);
+  setTimeout(()=>document.getElementById('hsub')?.classList.add('go'),200);
+  setTimeout(()=>document.getElementById('hbtns')?.classList.add('go'),300);
+  setTimeout(()=>document.getElementById('hkpi')?.classList.add('go'),500);
+  setTimeout(()=>document.getElementById('hterm')?.classList.add('go'),700);
+  setTimeout(()=>document.getElementById('hlive')?.classList.add('go'),900);
+  setTimeout(()=>{
+    document.querySelectorAll('.kpi-n[data-c]').forEach((n: any)=>{countUp(n,+n.dataset.c,n.dataset.s||'');delete n.dataset.c;});
+  },1800);
+  setTimeout(startTerminal,1400);
+}
+
+function countUp(el: any,target: number,suf: string){
+  const dur=2000,start=performance.now();
+  (function step(now){
+    const t=Math.min((now-start)/dur,1),ease=t===1?1:1-Math.pow(2,-10*t);
+    el.textContent=Math.round(ease*target)+suf;
+    if(t<1)requestAnimationFrame(step);
+  })(start);
+}
+
+/* LIVE TERMINAL */
+const termLines=[
+  {t:'$ nexus build --target=production',c:'p'},
+  {t:'→ Running 2,847 unit tests...',c:'c'},{t:'✓ All tests passed (2.3s)',c:'ok'},
+  {t:'→ Type checking (TypeScript)',c:'c'},{t:'✓ No type errors found',c:'ok'},
+  {t:'→ Building production bundle...',c:'c'},{t:'✓ Bundle size: 142kb gzipped',c:'ok'},
+  {t:'→ Pushing to Kubernetes cluster',c:'c'},{t:'✓ Deployed to 3/3 replicas',c:'ok'},
+  {t:'✓ P95 latency: 4ms · Uptime: 99.99%',c:'ok'},
+];
+function startTerminal(){
+  const out=document.getElementById('term-output');if(!out)return;
+  let i=0;
+  out.innerHTML = '';
+  const cur=document.createElement('span');cur.className='term-cursor';out.appendChild(cur);
+
+  function nextLine(){
+    if(i>=termLines.length){
+      setTimeout(()=>{
+        out.innerHTML='';
+        const c2=document.createElement('span');c2.className='term-cursor';out.appendChild(c2);
+        i=0;nextLine();
+      },3000);
+      return;
+    }
+    const l=termLines[i++];
+    const span=document.createElement('span');span.className='term-line';
+    span.innerHTML='<span class="'+l.c+'">'+l.t+'</span>\n';
+    out.insertBefore(span,out.lastChild);
+    out.scrollTop=out.scrollHeight;
+    setTimeout(nextLine,l.c==='p'?700:l.c==='ok'?200:400);
+  }
+  nextLine();
+}
+
+/* HERO 3D PARTICLES */
+(function(){
+  const canvas = document.getElementById('hero-3d') as HTMLCanvasElement;
+  if (!canvas) return;
+  const R=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false});R.setPixelRatio(1);
+  const S=new THREE.Scene(),C=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,1000);C.position.z=55;
+  const N=1600,pos=new Float32Array(N*3),col=new Float32Array(N*3);
+  const PAL=[[0,1,.82],[.17,.56,1],[.42,.09,1],[1,.12,.43]];
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*240;pos[i*3+1]=(Math.random()-.5)*200;pos[i*3+2]=(Math.random()-.5)*80;const c=PAL[i%4];col[i*3]=c[0];col[i*3+1]=c[1];col[i*3+2]=c[2];}
+  const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pos,3));pg.setAttribute('color',new THREE.BufferAttribute(col,3));
+  const pts=new THREE.Points(pg,new THREE.PointsMaterial({size:.3,vertexColors:true,transparent:true,opacity:.45}));
+  S.add(pts);
+  const dna=new THREE.Group();S.add(dna);
+  const dm1=new THREE.MeshBasicMaterial({color:0x00FFD1,transparent:true,opacity:.65}),dm2=new THREE.MeshBasicMaterial({color:0x6B17FF,transparent:true,opacity:.65}),rm=new THREE.LineBasicMaterial({color:0x00FFD1,transparent:true,opacity:.09});
+  for(let i=0;i<55;i++){const t=i/55,a=t*Math.PI*10,y=(t-.5)*34,r=3.8,x1=Math.cos(a)*r,z1=Math.sin(a)*r,x2=-x1,z2=-z1;
+    const m1=new THREE.Mesh(new THREE.SphereGeometry(.085,4,4),dm1);m1.position.set(x1,y,z1);
+    const m2=new THREE.Mesh(new THREE.SphereGeometry(.085,4,4),dm2);m2.position.set(x2,y,z2);
+    dna.add(m1,m2);if(i%5===0)dna.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x1,y,z1),new THREE.Vector3(x2,y,z2)]),rm));}
+  dna.position.set(28,0,-8);
+  function resize(){R.setSize(innerWidth,innerHeight);C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();}
+  window.addEventListener('resize',resize,{passive:true});resize();
+  let hmx=0,hmy=0;document.addEventListener('mousemove',e=>{hmx=(e.clientX/innerWidth-.5)*1.8;hmy=-(e.clientY/innerHeight-.5)*1.8;},{passive:true});
+  let t=0;(function loop(){requestAnimationFrame(loop);t+=.003;pts.rotation.y=t*.04+hmx*.05;pts.rotation.x=t*.015+hmy*.03;dna.rotation.y=t*.32;R.render(S,C);})();
+})();
+
+/* HERO SPHERE */
+(function(){
+  const canvas = document.getElementById('hsphere') as HTMLCanvasElement;
+  if(!canvas)return;
+  const R=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false});R.setPixelRatio(1);
+  const S=new THREE.Scene(),C=new THREE.PerspectiveCamera(50,1,.1,100);C.position.z=5.8;
+  const Nv=110,npos: THREE.Vector3[]=[];
+  for(let i=0;i<Nv;i++){const phi=Math.acos(-1+2*i/Nv),theta=Math.sqrt(Nv*Math.PI)*phi,r=2.5,p=new THREE.Vector3(r*Math.sin(phi)*Math.cos(theta),r*Math.sin(phi)*Math.sin(theta),r*Math.cos(phi));npos.push(p);
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.055,4,4),new THREE.MeshBasicMaterial({color:i%3===0?0x00FFD1:i%3===1?0x1B8EFF:0x6B17FF,transparent:true,opacity:.8}));m.position.copy(p);S.add(m);}
+  for(let i=0;i<Nv;i++)for(let j=i+1;j<Nv;j++){if(npos[i].distanceTo(npos[j])<1.55)S.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([npos[i],npos[j]]),new THREE.LineBasicMaterial({color:0x00FFD1,transparent:true,opacity:.055})));}
+  function resize(){const s=Math.min(canvas.parentElement?.clientWidth||460,460);R.setSize(s,s);C.aspect=1;C.updateProjectionMatrix();}
+  window.addEventListener('resize',resize,{passive:true});resize();
+  let hx=0,hy=0;document.getElementById('hero')?.addEventListener('mousemove',e=>{hx=(e.clientX/innerWidth-.5)*.65;hy=-(e.clientY/innerHeight-.5)*.65;},{passive:true});
+  let t=0;(function loop(){requestAnimationFrame(loop);t+=.005;S.rotation.y=t*.2+hx*.38;S.rotation.x=t*.08+hy*.22;R.render(S,C);})();
+})();
+
+/* Text scramble for hero */
+const SC='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+function scramble(el: any, orig: string){
+  let f=0;clearInterval(el._si);
+  el._si=setInterval(()=>{
+    f++;el.textContent=orig.split('').map((c,i)=>{if(c===' ')return ' ';return i/orig.length<f/22?c:SC[Math.floor(Math.random()*SC.length)];}).join('');
+    if(f>=22){el.textContent=orig;clearInterval(el._si);}
+  },40);
+}
+document.querySelector('.hspan.c2')?.addEventListener('mouseenter',function(this: any){scramble(this,"TOMORROW'S");});
+document.querySelector('.hspan.c3')?.addEventListener('mouseenter',function(this: any){scramble(this,'PRODUCTS');});
+
+// Listen for preloader done event
+window.addEventListener('preloaderDone', kickHeroAnimations);
+</script>

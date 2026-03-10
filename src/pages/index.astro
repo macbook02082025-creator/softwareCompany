@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Background from '../components/Background.astro';
+import Preloader from '../components/Preloader.astro';
+import Cursor from '../components/Cursor.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import WorkModal from '../components/WorkModal.astro';
+import FloatingUI from '../components/FloatingUI.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import Stats from '../components/Stats.astro';
+import Services from '../components/Services.astro';
+import About from '../components/About.astro';
+import Team from '../components/Team.astro';
+import Portfolio from '../components/Portfolio.astro';
+import CaseStudy from '../components/CaseStudy.astro';
+import Process from '../components/Process.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Awards from '../components/Awards.astro';
+import TechStack from '../components/TechStack.astro';
+import Blog from '../components/Blog.astro';
+import Pricing from '../components/Pricing.astro';
+import FAQ from '../components/FAQ.astro';
+import Metrics from '../components/Metrics.astro';
+import Clients from '../components/Clients.astro';
+import OpenSource from '../components/OpenSource.astro';
+import Careers from '../components/Careers.astro';
+import CTA from '../components/CTA.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout>
+    <Background />
+    <Preloader />
+    <Cursor />
+    <CommandPalette />
+    <WorkModal />
+    <FloatingUI />
+    <MobileMenu />
+    
+    <Navbar />
+    <main>
+        <Hero />
+        <Marquee />
+        <Stats />
+        <Services />
+        <About />
+        <Team />
+        <Portfolio />
+        <CaseStudy />
+        <Process />
+        <Testimonials />
+        <Awards />
+        <TechStack />
+        <Blog />
+        <Pricing />
+        <FAQ />
+        <Metrics />
+        <Clients />
+        <OpenSource />
+        <Careers />
+        <CTA />
+    </main>
+    <Footer />
+</BaseLayout>
+
+<script>
+// Global Scroll Reveal logic
+const rvObs=new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('in');
+}),{threshold:.07});
+document.querySelectorAll('.rv').forEach(r=>rvObs.observe(r));
+</script>

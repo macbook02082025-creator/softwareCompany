@@ -1,0 +1,84 @@
+<!-- OPEN SOURCE -->
+<section class="sec" id="opensource">
+  <div class="si">
+    <div class="ey rv">Community</div>
+    <h2 class="st rv">OPEN <span class="ac">SOURCE</span></h2>
+    <p class="sec-sub rv" style="color:var(--muted);max-width:560px;line-height:1.8;font-size:.95rem;">We give back to the ecosystem that built us. Our tools are used by 40,000+ developers worldwide.</p>
+    <div class="os-grid">
+      <div class="os-repo rv">
+        <div class="os-repo-top"><span class="os-repo-name">⬡ nexus-infra-sdk</span><span class="os-repo-lang">TypeScript</span></div>
+        <p class="os-repo-desc">Infrastructure-as-code SDK for multi-cloud Kubernetes deployments. Zero-config progressive delivery with built-in observability hooks.</p>
+        <div class="os-repo-stats">
+          <span class="os-stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.2k</span>
+          <span class="os-stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M5.559 8.855c.166 1.06.546 2.058 1.112 2.94L3 16l4.204-1.12A8 8 0 1016 4.5"/></svg>842</span>
+          <span class="os-stat">MIT License</span>
+        </div>
+      </div>
+      <div class="os-repo rv d1">
+        <div class="os-repo-top"><span class="os-repo-name">⬡ drift-detect</span><span class="os-repo-lang">Python</span></div>
+        <p class="os-repo-desc">Production ML model drift detection library. Real-time statistical monitoring with automated retraining triggers and Slack/PagerDuty integrations.</p>
+        <div class="os-repo-stats">
+          <span class="os-stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>3.1k</span>
+          <span class="os-stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M5.559 8.855c.166 1.06.546 2.058 1.112 2.94L3 16l4.204-1.12A8 8 0 1016 4.5"/></svg>611</span>
+          <span class="os-stat">Apache 2.0</span>
+        </div>
+      </div>
+      <div class="os-repo rv d2">
+        <div class="os-repo-top"><span class="os-repo-name">⬡ zero-trust-auth</span><span class="os-repo-lang">Go</span></div>
+        <p class="os-repo-desc">Zero-trust authentication middleware for microservices. mTLS, SPIFFE/SPIRE integration, JWT rotation, and real-time policy engine.</p>
+        <div class="os-repo-stats">
+          <span class="os-stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>2.8k</span>
+          <span class="os-stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M5.559 8.855c.166 1.06.546 2.058 1.112 2.94L3 16l4.204-1.12A8 8 0 1016 4.5"/></svg>509</span>
+          <span class="os-stat">MIT License</span>
+        </div>
+      </div>
+      <div class="os-repo rv d3">
+        <div class="os-repo-top"><span class="os-repo-name">⬡ chroma-ui</span><span class="os-repo-lang">TypeScript</span></div>
+        <p class="os-repo-desc">Design system and component library built for high-performance dashboards. Used internally across 12 products and open to the community.</p>
+        <div class="os-repo-stats">
+          <span class="os-stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>1.9k</span>
+          <span class="os-stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M5.559 8.855c.166 1.06.546 2.058 1.112 2.94L3 16l4.204-1.12A8 8 0 1016 4.5"/></svg>344</span>
+          <span class="os-stat">MIT License</span>
+        </div>
+      </div>
+    </div>
+    <div class="contrib-section rv">
+      <div class="contrib-label">GitHub contribution activity — last 12 months</div>
+      <div class="contrib-grid" id="contrib-grid"></div>
+    </div>
+    <div class="os-stats-row">
+      <div class="os-big-stat rv"><div class="os-big-val" data-target="12000" data-suffix="+">0</div><div class="os-big-lbl">GitHub Stars</div></div>
+      <div class="os-big-stat rv d1"><div class="os-big-val" data-target="2306" data-suffix="">0</div><div class="os-big-lbl">Forks</div></div>
+      <div class="os-big-stat rv d2"><div class="os-big-val" data-target="40" data-suffix="k+">0</div><div class="os-big-lbl">Developers Using</div></div>
+      <div class="os-big-stat rv d3"><div class="os-big-val" data-target="148" data-suffix="">0</div><div class="os-big-lbl">Contributors</div></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const grid=document.getElementById('contrib-grid'); if(!grid)return;
+  const levels=['','l1','l2','l3','l4'];
+  const weights=[0.3,0.25,0.22,0.15,0.08];
+  const days=53*7;
+  let html='';
+  for(let i=0;i<days;i++){
+    const r=Math.random();
+    let lvl=0;
+    let acc=0;
+    for(let j=0;j<weights.length;j++){acc+=weights[j];if(r<acc){lvl=j;break;}}
+    const cls='contrib-day'+(levels[lvl]?' '+levels[lvl]:'');
+    html+='<div class="'+cls+'" title="'+Math.floor(lvl*Math.random()*8)+' contributions"></div>';
+  }
+  grid.innerHTML=html;
+
+  // OS stats countup
+  new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(e.isIntersecting)e.target.querySelectorAll('[data-target]').forEach((n: any)=>{
+      const dur=2000,start=performance.now(),target=+n.dataset.target,suf=n.dataset.suffix||'';
+      (function step(now){const t=Math.min((now-start)/dur,1),ease=1-Math.pow(2,-10*t);n.textContent=Math.round(ease*target)+suf;if(t<1)requestAnimationFrame(step);})(start);
+      delete n.dataset.target;
+    });
+  }),{threshold:.3}).observe(document.getElementById('opensource')!);
+})();
+</script>

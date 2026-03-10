@@ -1,0 +1,42 @@
+<!-- TECH STACK -->
+<section class="sec tech-bg" id="tech">
+  <div class="si">
+    <div class="ey rv">Technology</div>
+    <h2 class="st rv">OUR <span class="ac">STACK</span></h2>
+    <div class="tech-filters rv">
+      <button class="tf active" data-cat="all">All</button>
+      <button class="tf" data-cat="Frontend">Frontend</button>
+      <button class="tf" data-cat="Backend">Backend</button>
+      <button class="tf" data-cat="Data">Data</button>
+      <button class="tf" data-cat="Cloud">Cloud</button>
+      <button class="tf" data-cat="AI">AI / ML</button>
+    </div>
+    <div class="tech-matrix rv">
+      <div class="tm"><span>React</span></div><div class="tm"><span>Next.js</span></div><div class="tm"><span>TypeScript</span></div><div class="tm"><span>Node.js</span></div><div class="tm"><span>Python</span></div>
+      <div class="tm"><span>Rust</span></div><div class="tm"><span>Go</span></div><div class="tm"><span>PostgreSQL</span></div><div class="tm"><span>Redis</span></div><div class="tm"><span>Kubernetes</span></div>
+      <div class="tm"><span>AWS</span></div><div class="tm"><span>GCP</span></div><div class="tm"><span>Terraform</span></div><div class="tm"><span>GraphQL</span></div><div class="tm"><span>PyTorch</span></div>
+      <div class="tm"><span>TensorFlow</span></div><div class="tm"><span>Docker</span></div><div class="tm"><span>Kafka</span></div><div class="tm"><span>Elastic</span></div><div class="tm"><span>WebGL</span></div>
+    </div>
+  </div>
+</section>
+
+<script>
+const TC: Record<string, string[]>={
+    Frontend:['React','Next.js','TypeScript','WebGL'],
+    Backend:['Node.js','Python','Rust','Go','GraphQL'],
+    Data:['PostgreSQL','Redis','Kafka','Elastic'],
+    Cloud:['Kubernetes','AWS','GCP','Terraform','Docker'],
+    AI:['PyTorch','TensorFlow']
+};
+
+document.querySelectorAll('.tf').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tf').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = (btn as HTMLElement).dataset.cat;
+    document.querySelectorAll('.tm').forEach((t: any)=>{
+        t.classList.toggle('hidden',cat!=='all'&&!(TC[cat!]||[]).includes(t.querySelector('span').textContent));
+    });
+  });
+});
+</script>

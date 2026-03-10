@@ -1,0 +1,54 @@
+<!-- CASE STUDY -->
+<section class="sec cs-bg" id="casestudy">
+  <div class="cs-inner">
+    <div class="ey rv">Deep Dive</div>
+    <h2 class="st rv">CASE <span class="ac">STUDY</span></h2>
+    <div class="cs-header rv">
+      <div>
+        <div class="cs-category">FinTech · 18-Month Engagement</div>
+        <h3 style="font-family:var(--fd);font-size:clamp(2rem,4vw,3.8rem);line-height:.92;letter-spacing:.02em;margin-bottom:1rem;">Vault Banking:<br>From Broken Monolith<br>to $2B Platform</h3>
+        <p style="font-size:.9rem;color:var(--muted);line-height:1.8;max-width:520px;">Meridian Financial's legacy core banking system was bleeding $800K/year in incident costs and blocking every product initiative. We rebuilt it — in production, with zero downtime, in 18 months.</p>
+      </div>
+      <div class="cs-result-grid">
+        <div class="cs-result"><div class="cs-r-val">10x</div><div class="cs-r-lbl">Performance gain</div></div>
+        <div class="cs-result"><div class="cs-r-val">0</div><div class="cs-r-lbl">Planned downtime events</div></div>
+        <div class="cs-result"><div class="cs-r-val">$2B+</div><div class="cs-r-lbl">Daily transaction volume</div></div>
+        <div class="cs-result"><div class="cs-r-val">-94%</div><div class="cs-r-lbl">Incident cost reduction</div></div>
+      </div>
+    </div>
+    <div class="cs-timeline rv">
+      <div class="cs-phase"><div class="cs-phase-num">Phase 01 — Months 1–3</div><h4 class="cs-phase-title">Discovery & Strangler Fig Architecture</h4><p class="cs-phase-body">We ran a 3-month discovery sprint to instrument every service, map all data flows, and identify the 12 critical paths. Rather than a big-bang rewrite, we designed a strangler fig pattern allowing new services to intercept legacy traffic incrementally.</p><div class="cs-phase-tag"><span class="cs-tag">Go</span><span class="cs-tag">CockroachDB</span><span class="cs-tag">Kafka</span><span class="cs-tag">Distributed Tracing</span></div></div>
+      <div class="cs-phase"><div class="cs-phase-num">Phase 02 — Months 4–10</div><h4 class="cs-phase-title">Service Extraction & Dual-Write</h4><p class="cs-phase-body">Extracted 23 microservices using dual-write patterns with automated reconciliation. Each service launched with complete observability, PCI-DSS compliance verification, and automated load testing before receiving real traffic.</p><div class="cs-phase-tag"><span class="cs-tag">Istio</span><span class="cs-tag">Prometheus</span><span class="cs-tag">Vault</span><span class="cs-tag">Chaos Engineering</span></div></div>
+      <div class="cs-phase"><div class="cs-phase-num">Phase 03 — Months 11–16</div><h4 class="cs-phase-title">Migration & Traffic Cutover</h4><p class="cs-phase-body">Migrated $1.2B in daily transaction volume using shadow mode and percentage-based traffic shifting. Zero-downtime cutover completed in a 4-hour maintenance window — 12 hours ahead of schedule.</p><div class="cs-phase-tag"><span class="cs-tag">ArgoCD</span><span class="cs-tag">Feature Flags</span><span class="cs-tag">Load Testing</span></div></div>
+      <div class="cs-phase"><div class="cs-phase-num">Phase 04 — Months 17–18</div><h4 class="cs-phase-title">Legacy Decommission & Hyperscale</h4><p class="cs-phase-body">Decommissioned 850K lines of legacy PHP. Enabled 4 previously impossible product initiatives in the following quarter. P95 latency dropped from 340ms to 4ms. On-call incidents down 94%.</p><div class="cs-phase-tag"><span class="cs-tag">TimescaleDB</span><span class="cs-tag">Datadog</span><span class="cs-tag">Terraform</span></div></div>
+    </div>
+    <div class="cs-visual rv">
+      <div class="cs-visual-title">// Transaction Processing Latency (P95) — Before vs After</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;">
+        <div><div style="font-family:var(--fm);font-size:.6rem;color:var(--muted);margin-bottom:.7rem;letter-spacing:.1em;">BEFORE MIGRATION</div><div class="cs-chart" id="cs-chart-before"></div><div class="cs-chart-labels"><span class="cs-chart-lbl">Q1'23</span><span class="cs-chart-lbl">Q2'23</span><span class="cs-chart-lbl">Q3'23</span><span class="cs-chart-lbl">Q4'23</span><span class="cs-chart-lbl">Q1'24</span></div></div>
+        <div><div style="font-family:var(--fm);font-size:.6rem;color:var(--c1);margin-bottom:.7rem;letter-spacing:.1em;">AFTER MIGRATION</div><div class="cs-chart" id="cs-chart-after"></div><div class="cs-chart-labels"><span class="cs-chart-lbl">Q1'23</span><span class="cs-chart-lbl">Q2'23</span><span class="cs-chart-lbl">Q3'23</span><span class="cs-chart-lbl">Q4'23</span><span class="cs-chart-lbl">Q1'24</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function buildChart(id: string,heights: number[],color: string){
+  const c=document.getElementById(id);if(!c)return;
+  heights.forEach(h=>{
+    const b=document.createElement('div');b.className='cs-bar';
+    b.style.cssText='background:linear-gradient(180deg,'+color+','+color+'44);height:0%;transition:height 1.4s cubic-bezier(.16,1,.3,1);';
+    c.appendChild(b);setTimeout(()=>{b.style.height=h+'%';},200);
+  });
+}
+
+const csSection = document.getElementById('casestudy');
+if (csSection) {
+    new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(e.isIntersecting){
+        buildChart('cs-chart-before',[65,72,78,82,90],'#FF1F6E');
+        buildChart('cs-chart-after',[10,8,12,6,4],'#00FFD1');
+    }
+    }),{threshold:.4}).observe(csSection);
+}
+</script>

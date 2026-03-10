@@ -1,0 +1,35 @@
+<!-- ABOUT -->
+<section class="sec about-bg" id="about">
+  <div class="blob-field"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+  <div class="about-grid rv">
+    <div>
+      <div class="about-eyebrow">Our Story</div>
+      <h2 class="about-headline">WE BUILT<br><span class="ac">NEXUS</span><br>FOR BUILDERS</h2>
+      <p class="about-body">Founded in 2013 by a team of engineers who were tired of watching great ideas fail due to poor execution, Nexus was built on a simple belief: the companies that will define the next decade are being built right now — and they deserve engineering partners who treat their codebase like a cathedral, not a construction site.</p>
+      <p class="about-body" style="margin-top:-.5rem">We're a remote-first studio of 50+ engineers, designers, and strategists embedded across 14 cities. No middle management. No bloated hierarchies. Just builders who ship world-class products with obsessive attention to craft.</p>
+      <div class="about-vals">
+        <div class="av-item rv d1"><span class="av-icon">⚡</span><div class="av-text"><h4>Speed without compromise</h4><p>We move at startup velocity without sacrificing the structural integrity that lets you scale to millions.</p></div></div>
+        <div class="av-item rv d2"><span class="av-icon">🔭</span><div class="av-text"><h4>Decade-long thinking</h4><p>Every architecture decision accounts for where your product needs to be in ten years, not just the next sprint.</p></div></div>
+        <div class="av-item rv d3"><span class="av-icon">🤝</span><div class="av-text"><h4>Radical transparency</h4><p>Daily updates. No black boxes. You always know the current state, blockers, and the plan to resolve them.</p></div></div>
+      </div>
+    </div>
+    <div class="about-vis rv d2">
+      <div class="about-vis-inner">
+        <div class="about-vis-inner" style="flex-direction:row;gap:1rem;flex:0 0 auto;">
+          <div class="av-card" style="flex:1;"><div class="founded-badge">EST. 2013</div><div class="av-card-label">Annual Revenue Growth</div><div class="av-card-val" style="color:var(--c1);">142%</div><div class="av-card-sub">CAGR over last 3 years</div><div class="av-card-bar"><div class="av-card-fill" style="width:0;background:linear-gradient(90deg,var(--c1),var(--c4));" data-w="85%"></div></div></div>
+          <div class="av-card" style="flex:1;"><div class="av-card-label">Client Retention Rate</div><div class="av-card-val" style="color:var(--c4);">94%</div><div class="av-card-sub">Return within 18 months</div><div class="av-card-bar"><div class="av-card-fill" style="width:0;background:linear-gradient(90deg,var(--c4),var(--c2));" data-w="94%"></div></div></div>
+        </div>
+        <div class="av-card"><div class="av-card-label">Countries with active deployments</div><div class="av-card-val" style="color:var(--c2);">38</div><div class="av-card-sub">Across 6 continents · 24/7 SRE coverage</div><div class="av-card-bar"><div class="av-card-fill" style="width:0;background:linear-gradient(90deg,var(--c2),var(--c3));" data-w="76%"></div></div></div>
+        <div class="av-card"><div class="av-card-label">Lines of production code shipped (2024)</div><div class="av-card-val" style="color:var(--c3);">2.4M+</div><div class="av-card-sub">Across 47 active client codebases</div><div class="av-card-bar"><div class="av-card-fill" style="width:0;background:linear-gradient(90deg,var(--c3),var(--c5));" data-w="92%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.about-vis').forEach(v=>{
+  new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(e.isIntersecting)e.target.querySelectorAll('.av-card-fill[data-w]').forEach((b: any)=>{setTimeout(()=>{b.style.width=b.dataset.w;},300);});
+  }),{threshold:.3}).observe(v);
+});
+</script>

@@ -1,0 +1,56 @@
+<div id="work-modal">
+  <div id="wm-box">
+    <button id="wm-close">✕</button>
+    <div id="wm-tag" class="wm-tag"></div>
+    <div id="wm-title" class="wm-title"></div>
+    <p id="wm-sub" class="wm-sub"></p>
+    <div id="wm-metrics" class="wm-metrics"></div>
+    <div class="wm-body">
+      <div><div class="wm-section-title">Challenges solved</div><ul id="wm-challenges" class="wm-list"></ul></div>
+      <div><div class="wm-section-title">Technology used</div><ul id="wm-stack" class="wm-list"></ul></div>
+    </div>
+    <div class="wm-footer"><a href="#cta" class="gbtn" id="wm-cta-btn">Start a similar project →</a></div>
+  </div>
+</div>
+
+<script>
+const WD: Record<string, any>={
+  wc1:{tag:'AI Platform · 2024',title:'Sentinel AI',sub:'Enterprise anomaly detection processing 50M+ events daily.',metrics:[{val:'50M+',lbl:'Events/Day'},{val:'99.99%',lbl:'Uptime'},{val:'<12ms',lbl:'P99'}],challenges:['Real-time ML inference','Multi-tenant isolation','Zero-downtime deploys','FINRA & SOC-2'],stack:['PyTorch','Kafka','Kubernetes','gRPC','Redis','Prometheus','ArgoCD','Vault'],color:'#00FFD1'},
+  wc2:{tag:'FinTech · 2024',title:'Vault Banking',sub:'Core banking processing $2B+ daily with zero planned downtime.',metrics:[{val:'$2B+',lbl:'Daily Vol'},{val:'0',lbl:'Downtime'},{val:'4ms',lbl:'P95'}],challenges:['Distributed ledger','PCI-DSS L1','Multi-currency','Audit trail'],stack:['Go','CockroachDB','Kafka','Istio','Terraform','AWS','Datadog','Vault'],color:'#6B17FF'},
+  wc3:{tag:'HealthTech · 2024',title:'Pulse OS',sub:'#1 medical app, 2M daily users, HIPAA-compliant.',metrics:[{val:'#1',lbl:'App Store'},{val:'2M',lbl:'DAU'},{val:'4.9★',lbl:'Rating'}],challenges:['HIPAA architecture','On-device CoreML','Biometric sync','FDA SaMD'],stack:['Swift','Kotlin','CoreML','Firebase','FastAPI','PostgreSQL','Redis','GCP'],color:'#1B8EFF'},
+  wc4:{tag:'E-Commerce · 2023',title:'Orbit Commerce',sub:'AI personalization delivering 300% conversion lift.',metrics:[{val:'300%',lbl:'Conv. Lift'},{val:'42',lbl:'Markets'},{val:'15K+',lbl:'SKUs'}],challenges:['Recommendation engine','Dynamic pricing','Multi-market i18n','Payment orchestration'],stack:['Next.js','Python','PyTorch','Stripe','Elasticsearch','Redis','Vercel'],color:'#FF1F6E'},
+  wc5:{tag:'PropTech · 2023',title:'Atlas Platform',sub:'$500M in managed real estate assets with live pricing.',metrics:[{val:'$500M',lbl:'Assets'},{val:'Real-time',lbl:'Pricing'},{val:'94%',lbl:'Forecast'}],challenges:['Market data ingest','Automated valuation','SEC reporting','Multi-fund analytics'],stack:['React','FastAPI','TimescaleDB','Flink','AWS','Terraform','Grafana','dbt'],color:'#FFD100'}
+};
+
+const modal=document.getElementById('work-modal');
+const wmClose=document.getElementById('wm-close');
+const wmCtaBtn=document.getElementById('wm-cta-btn');
+
+function openWorkModal(id: string){
+  const d=WD[id];if(!d || !modal)return;
+  const wmTag = document.getElementById('wm-tag');
+  const wmTitle = document.getElementById('wm-title');
+  const wmSub = document.getElementById('wm-sub');
+  const wmMetrics = document.getElementById('wm-metrics');
+  const wmChallenges = document.getElementById('wm-challenges');
+  const wmStack = document.getElementById('wm-stack');
+
+  if(wmTag) wmTag.textContent=d.tag;
+  if(wmTitle) wmTitle.textContent=d.title;
+  if(wmSub) wmSub.textContent=d.sub;
+  if(wmMetrics) wmMetrics.innerHTML=d.metrics.map((m: any)=>'<div class="wm-metric"><div class="wm-m-val" style="color:'+d.color+'">'+m.val+'</div><div class="wm-m-lbl">'+m.lbl+'</div></div>').join('');
+  if(wmChallenges) wmChallenges.innerHTML=d.challenges.map((c: any)=>'<li>'+c+'</li>').join('');
+  if(wmStack) wmStack.innerHTML=d.stack.map((s: any)=>'<li>'+s+'</li>').join('');
+  
+  modal.classList.add('open');
+}
+
+function closeWorkModal(){modal?.classList.remove('open');}
+
+wmClose?.addEventListener('click',closeWorkModal);
+modal?.addEventListener('click',e=>{if(e.target===modal)closeWorkModal();});
+wmCtaBtn?.addEventListener('click', closeWorkModal);
+
+// Listen for global open event
+window.addEventListener('openWorkModal', ((e: CustomEvent)=>openWorkModal(e.detail.id)) as any);
+</script>

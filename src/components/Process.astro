@@ -1,0 +1,37 @@
+<!-- PROCESS -->
+<section class="sec proc-bg" id="process">
+  <div class="si">
+    <div class="ey rv">Methodology</div>
+    <h2 class="st rv">HOW WE <span class="ac">BUILD</span></h2>
+    <div class="proc-wrap">
+      <div class="proc-pipe">
+        <div class="ps rv"><div class="ps-num-wrap"><span class="ps-n">01</span></div><div class="ps-body"><h3 class="ps-h">Discovery & Strategy</h3><p class="ps-p">Deep immersion in your domain. We map goals, users, and technical constraints before touching a keyboard — because clarity always compounds into velocity.</p></div></div>
+        <div class="ps rv d1"><div class="ps-num-wrap"><span class="ps-n">02</span></div><div class="ps-body"><h3 class="ps-h">Architecture & Design</h3><p class="ps-p">System design, API contracts, and a full design system signed off before a single sprint kicks off. No expensive rewrites. No surprises.</p></div></div>
+        <div class="ps rv d2"><div class="ps-num-wrap"><span class="ps-n">03</span></div><div class="ps-body"><h3 class="ps-h">Agile Engineering</h3><p class="ps-p">Two-week sprints. Daily standups. Weekly demos. You hold a meaningful opinion on every major decision throughout the build.</p></div></div>
+        <div class="ps rv d3"><div class="ps-num-wrap"><span class="ps-n">04</span></div><div class="ps-body"><h3 class="ps-h">Launch & Hyperscale</h3><p class="ps-p">Zero-downtime deployment, load testing, and 24/7 observability from day one. We're with you from MVP through 100x growth.</p></div></div>
+      </div>
+      <div class="proc-vis rv d2"><canvas id="pcanvas"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<script>
+import * as THREE from 'three';
+
+/* PROCESS CANVAS */
+(function(){
+  const canvas = document.getElementById('pcanvas') as HTMLCanvasElement;
+  if(!canvas)return;
+  const R=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false});R.setPixelRatio(1);
+  const S=new THREE.Scene(),C=new THREE.PerspectiveCamera(50,1,.1,100);C.position.z=7.5;
+  const meshes=[
+    new THREE.Mesh(new THREE.DodecahedronGeometry(2.2,0),new THREE.MeshBasicMaterial({color:0x00FFD1,wireframe:true,transparent:true,opacity:.32})),
+    new THREE.Mesh(new THREE.IcosahedronGeometry(1.55,0),new THREE.MeshBasicMaterial({color:0x6B17FF,wireframe:true,transparent:true,opacity:.26})),
+    new THREE.Mesh(new THREE.OctahedronGeometry(1,0),new THREE.MeshBasicMaterial({color:0xFF1F6E,wireframe:true,transparent:true,opacity:.22}))
+  ];
+  meshes.forEach(m=>S.add(m));
+  function resize(){const w=canvas.parentElement?.clientWidth||420;R.setSize(w,w);C.aspect=1;C.updateProjectionMatrix();}
+  window.addEventListener('resize',resize,{passive:true});resize();
+  let t=0;(function loop(){requestAnimationFrame(loop);t+=.006;meshes[0].rotation.y=t*.38;meshes[0].rotation.x=t*.19;meshes[1].rotation.y=-t*.55;meshes[1].rotation.z=t*.33;meshes[2].rotation.x=t*.75;meshes[2].rotation.y=t*.52;R.render(S,C);})();
+})();
+</script>

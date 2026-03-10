@@ -1,0 +1,114 @@
+<!-- WORK -->
+<section class="sec work-bg" id="work">
+  <div class="work-hdr"><div class="ey rv">Selected Portfolio</div><h2 class="st rv">RECENT <span class="ac">WORK</span></h2></div>
+  <div class="hscroll-outer rv" id="hscroll-outer">
+    <div class="hscroll-track" id="htrack">
+      <div class="wcard" id="wc1"><div class="wcard-bg"></div><canvas class="wcard-canvas" id="wcc1"></canvas><div class="wcard-veil"><div class="wcard-tag">AI Platform · 2024</div><div class="wcard-title">Sentinel AI</div><div class="wcard-sub">50M events/day · Fortune 500 · 99.99% uptime</div></div><div class="wcard-open">↗</div></div>
+      <div class="wcard" id="wc2"><div class="wcard-bg"></div><canvas class="wcard-canvas" id="wcc2"></canvas><div class="wcard-veil"><div class="wcard-tag">FinTech · 2024</div><div class="wcard-title">Vault Banking</div><div class="wcard-sub">$2B transaction platform · Zero downtime</div></div><div class="wcard-open">↗</div></div>
+      <div class="wcard" id="wc3"><div class="wcard-bg"></div><canvas class="wcard-canvas" id="wcc3"></canvas><div class="wcard-veil"><div class="wcard-tag">HealthTech · 2024</div><div class="wcard-title">Pulse OS</div><div class="wcard-sub">#1 Medical App · 2M daily users</div></div><div class="wcard-open">↗</div></div>
+      <div class="wcard" id="wc4"><div class="wcard-bg"></div><canvas class="wcard-canvas" id="wcc4"></canvas><div class="wcard-veil"><div class="wcard-tag">E-Commerce · 2023</div><div class="wcard-title">Orbit Commerce</div><div class="wcard-sub">300% conversion lift · AI personalization</div></div><div class="wcard-open">↗</div></div>
+      <div class="wcard" id="wc5"><div class="wcard-bg"></div><canvas class="wcard-canvas" id="wcc5"></canvas><div class="wcard-veil"><div class="wcard-tag">PropTech · 2023</div><div class="wcard-title">Atlas Platform</div><div class="wcard-sub">$500M in managed real estate assets with live pricing</div></div><div class="wcard-open">↗</div></div>
+    </div>
+  </div>
+  <div class="hscroll-nav rv">
+    <button class="hnav-btn" id="hscroll-prev">←</button>
+    <div class="hnav-dots" id="ndots">
+        <div class="ndot active" data-idx="0"></div>
+        <div class="ndot" data-idx="1"></div>
+        <div class="ndot" data-idx="2"></div>
+        <div class="ndot" data-idx="3"></div>
+        <div class="ndot" data-idx="4"></div>
+    </div>
+    <button class="hnav-btn" id="hscroll-next">→</button>
+    <span class="drag-hint"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7l-3 3 3 3M16 7l3 3-3 3" stroke-linecap="round"/></svg> Drag to explore</span>
+  </div>
+</section>
+
+<script>
+let wIdx=0;
+const htrack=document.getElementById('htrack') as HTMLElement;
+const ndots=document.querySelectorAll('.ndot');
+const prevBtn = document.getElementById('hscroll-prev');
+const nextBtn = document.getElementById('hscroll-next');
+
+function scrollWork(dir: number){
+  wIdx=Math.max(0,Math.min(wIdx+dir,4));
+  const card = htrack.querySelector('.wcard') as HTMLElement;
+  const cw=card.offsetWidth+24;
+  htrack.style.transform='translateX(-'+(wIdx*cw)+'px)';
+  ndots.forEach((d,i)=>d.classList.toggle('active',i===wIdx));
+}
+
+prevBtn?.addEventListener('click', () => scrollWork(-1));
+nextBtn?.addEventListener('click', () => scrollWork(1));
+
+ndots.forEach((d: any)=>{
+    d.addEventListener('click',()=>{
+        wIdx=parseInt(d.dataset.idx);
+        scrollWork(0);
+    });
+});
+
+let isDrag=false,dX=0,dStart=0,dVel=0,dLast=0;
+htrack?.addEventListener('mousedown',(e: any)=>{
+    isDrag=true;
+    dX=e.clientX;
+    dLast=e.clientX;
+    const card = htrack.querySelector('.wcard') as HTMLElement;
+    dStart=wIdx*(card.offsetWidth+24);
+    htrack.style.transition='none';
+});
+
+document.addEventListener('mousemove',(e: any)=>{
+    if(!isDrag)return;
+    dVel=e.clientX-dLast;
+    dLast=e.clientX;
+    htrack.style.transform='translateX(-'+Math.max(0,dStart+(dX-e.clientX))+'px)';
+});
+
+document.addEventListener('mouseup',(e: any)=>{
+    if(!isDrag)return;
+    isDrag=false;
+    htrack.style.transition='';
+    const dx=dX-e.clientX;
+    scrollWork(Math.abs(dx)>50?dx>0?1:-1:(dVel<-4?-1:dVel>4?1:0));
+});
+
+/* WORK CARD CANVASES */
+function mkCardCanvas(id: string,r: number,g: number,b: number){
+  const c = document.getElementById(id) as HTMLCanvasElement;
+  if(!c)return;
+  function init(){
+    const w=c.offsetWidth||500,h=c.offsetHeight||310;
+    c.width=w;c.height=h;
+    const ctx=c.getContext('2d');
+    if (!ctx) return;
+    const nd=Array.from({length:30},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38,s:Math.random()*1.6+.5}));
+    function draw(){
+      if (!ctx) return;
+      ctx.clearRect(0,0,w,h);
+      nd.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>w)n.vx*=-1;if(n.y<0||n.y>h)n.vy*=-1;});
+      for(let i=0;i<nd.length;i++)for(let j=i+1;j<nd.length;j++){const ex=nd[i].x-nd[j].x,ey=nd[i].y-nd[j].y,d=Math.sqrt(ex*ex+ey*ey);if(d<130){ctx.beginPath();ctx.strokeStyle='rgba('+r+','+g+','+b+','+(1-d/130)*.22+')';ctx.lineWidth=.45;ctx.moveTo(nd[i].x,nd[i].y);ctx.lineTo(nd[j].x,nd[j].y);ctx.stroke();}}
+      nd.forEach(n=>{ctx.beginPath();ctx.arc(n.x,n.y,n.s,0,Math.PI*2);ctx.fillStyle='rgba('+r+','+g+','+b+',.7)';ctx.fill();});
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+  if(c.offsetWidth>0)init();else setTimeout(init,600);
+}
+
+setTimeout(()=>{
+    mkCardCanvas('wcc1',0,255,209);
+    mkCardCanvas('wcc2',107,23,255);
+    mkCardCanvas('wcc3',27,142,255);
+    mkCardCanvas('wcc4',255,31,110);
+    mkCardCanvas('wcc5',255,209,0);
+},1000);
+
+// Open Modal logic
+document.querySelectorAll('.wcard').forEach(c=>{
+    c.addEventListener('click',() => {
+        window.dispatchEvent(new CustomEvent('openWorkModal', { detail: { id: c.id } }));
+    });
+});
+</script>

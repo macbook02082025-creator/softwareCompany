@@ -1,0 +1,79 @@
+<canvas id="cursor-cv" style="position:fixed;inset:0;pointer-events:none;z-index:99999;"></canvas>
+
+<script>
+(function initCursor(){
+  const cv = document.getElementById('cursor-cv') as HTMLCanvasElement;
+  if(!cv)return;
+  const ctx = cv.getContext('2d');
+  if (!ctx) return;
+  let W=0,H=0;
+  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+  window.addEventListener('resize',resize,{passive:true});
+  resize();
+
+  let mx=W/2,my=H/2,dx=W/2,dy=H/2,rx=W/2,ry=H/2;
+  let curColor='#00FFD1',onLink=false,linkLabel='';
+  const TN=16,trail=Array.from({length:TN},()=>({x:W/2,y:H/2}));
+  let th=0;
+
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
+
+  // Section color via IntersectionObserver
+  const CMAP: Record<string, string>={hero:'#00FFD1',services:'#6B17FF',about:'#1B8EFF',team:'#FF1F6E',work:'#1B8EFF',casestudy:'#1B8EFF',process:'#FF1F6E',testi:'#FFD100',awards:'#FFD100',tech:'#00FFD1',blog:'#6B17FF',pricing:'#00FFD1',faq:'#00FFD1',cta:'#00FFD1',metrics:'#00FFD1',clients:'#6B17FF',opensource:'#00FFD1',careers:'#FFD100'};
+  const cObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting&&CMAP[e.target.id])curColor=CMAP[e.target.id];});
+  },{threshold:.2});
+  Object.keys(CMAP).forEach(id=>{const el=document.getElementById(id);if(el)cObs.observe(el);});
+
+  // Hover labels
+  const LMAP: Record<string, string>={'a':'CLICK','button':'CLICK','.wcard':'VIEW','.flip-wrap':'FLIP','.team-card':'MEET','.award-card':'AWARD','.blog-card':'READ','.price-card':'SELECT','.faq-q':'EXPAND','.tm':'STACK'};
+  
+  function updateHovers() {
+    document.querySelectorAll('a,button,.wcard,.flip-wrap,.tm,.tc,.team-card,.award-card,.blog-card,.faq-q').forEach(el=>{
+        el.addEventListener('mouseenter',()=>{
+        onLink=true;
+        const k=Object.keys(LMAP).find(k=>el.matches(k));
+        linkLabel= k ? LMAP[k] : 'CLICK';
+        });
+        el.addEventListener('mouseleave',()=>{onLink=false;linkLabel='';});
+    });
+  }
+  updateHovers();
+  // Re-run on DOM changes if needed
+  const observer = new MutationObserver(updateHovers);
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  function rgba(hex: string, a: number){
+    const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+    return'rgba('+r+','+g+','+b+','+a+')';
+  }
+
+  // RAF loop
+  (function loop(){
+    requestAnimationFrame(loop);
+    dx+=(mx-dx)*0.22; dy+=(my-dy)*0.22;
+    rx+=(mx-rx)*0.09; ry+=(my-ry)*0.09;
+    trail[th]={x:dx,y:dy}; th=(th+1)%TN;
+    ctx.clearRect(0,0,W,H);
+    // Trail
+    for(let i=0;i<TN;i++){
+      const p=trail[(th-i-1+TN)%TN];
+      const a=(1-i/TN)*(1-i/TN)*0.22;
+      const r2=Math.max(0.5,3-i*0.14);
+      ctx.beginPath();ctx.arc(p.x,p.y,r2,0,6.283);
+      ctx.fillStyle=rgba(curColor,a);ctx.fill();
+    }
+    if(onLink){
+      ctx.beginPath();ctx.arc(rx,ry,30,0,6.283);
+      ctx.strokeStyle=rgba('#6B17FF',0.32);ctx.lineWidth=1;ctx.stroke();
+      ctx.fillStyle=curColor;ctx.font='600 9px monospace';
+      ctx.textAlign='center';ctx.fillText(linkLabel,rx,ry+46);
+    } else {
+      ctx.beginPath();ctx.arc(rx,ry,18,0,6.283);
+      ctx.strokeStyle=rgba(curColor,0.2);ctx.lineWidth=1;ctx.stroke();
+      ctx.beginPath();ctx.arc(dx,dy,3.5,0,6.283);
+      ctx.fillStyle=curColor;ctx.fill();
+    }
+  })();
+})();
+</script>

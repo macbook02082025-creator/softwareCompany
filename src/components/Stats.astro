@@ -1,0 +1,47 @@
+<!-- NUMBERS -->
+<div class="nums-bg">
+  <div class="nums-grid rv">
+    <div class="nc"><canvas class="nc-ring" data-color="#00FFD1" data-pct="90" width="90" height="90"></canvas><div class="nc-val" data-target="340" data-suffix="+">0</div><div class="nc-lbl">Projects Delivered</div></div>
+    <div class="nc"><canvas class="nc-ring" data-color="#1B8EFF" data-pct="98" width="90" height="90"></canvas><div class="nc-val" data-target="98" data-suffix="%">0</div><div class="nc-lbl">Client Satisfaction</div></div>
+    <div class="nc"><canvas class="nc-ring" data-color="#6B17FF" data-pct="75" width="90" height="90"></canvas><div class="nc-val" data-target="12" data-suffix="yr">0</div><div class="nc-lbl">Years of Excellence</div></div>
+    <div class="nc"><canvas class="nc-ring" data-color="#FF1F6E" data-pct="60" width="90" height="90"></canvas><div class="nc-val" data-target="50" data-suffix="+">0</div><div class="nc-lbl">Elite Engineers</div></div>
+  </div>
+</div>
+
+<script>
+function countUp(el: any,target: number,suf: string){
+  const dur=2000,start=performance.now();
+  (function step(now){
+    const t=Math.min((now-start)/dur,1),ease=t===1?1:1-Math.pow(2,-10*t);
+    el.textContent=Math.round(ease*target)+suf;
+    if(t<1)requestAnimationFrame(step);
+  })(start);
+}
+
+function drawArc(canvas: any,color: string,pct: number){
+  const ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height,cx=W/2,cy=H/2,r=38,lw=2.5;
+  ctx.clearRect(0,0,W,H);
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=lw;ctx.stroke();
+  const s=-Math.PI/2,end=s+(pct/100)*Math.PI*2;
+  const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,color);g.addColorStop(1,color+'88');
+  ctx.beginPath();ctx.arc(cx,cy,r,s,end);ctx.strokeStyle=g;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
+  const ax=cx+Math.cos(end)*r,ay=cy+Math.sin(end)*r;
+  ctx.beginPath();ctx.arc(ax,ay,4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+}
+
+const statsSection = document.querySelector('.nums-grid');
+if (statsSection) {
+    new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(e.isIntersecting){
+        e.target.querySelectorAll('[data-target]').forEach((n: any)=>{
+            countUp(n,+n.dataset.target,n.dataset.suffix||'');
+            delete n.dataset.target;
+        });
+        e.target.querySelectorAll('.nc-ring').forEach((c: any)=>{
+            let p=0;const tgt=+c.dataset.pct,col=c.dataset.color;
+            (function a(){p=Math.min(p+tgt/60,tgt);drawArc(c,col,p);if(p<tgt)requestAnimationFrame(a);})();
+        });
+    }
+    }),{threshold:.3}).observe(statsSection);
+}
+</script>

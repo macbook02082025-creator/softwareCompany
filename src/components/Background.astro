@@ -1,0 +1,85 @@
+<canvas id="glbg"></canvas>
+<div class="grid-bg"></div>
+<div class="vignette"></div>
+<div id="spotlight"></div>
+<div id="spb"></div>
+
+<script>
+/* WEBGL BG */
+(function(){
+  const canvas = document.getElementById('glbg') as HTMLCanvasElement;
+  if (!canvas) return;
+  const gl = canvas.getContext('webgl',{antialias:false,powerPreference:'low-power'});
+  if(!gl){canvas.style.display='none';return;}
+  const resize=()=>{canvas.width=Math.min(innerWidth,1400);canvas.height=Math.min(innerHeight,900);gl.viewport(0,0,canvas.width,canvas.height);};
+  window.addEventListener('resize',resize,{passive:true});resize();
+  const VS='attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+  const FS='precision mediump float;uniform float u_t;uniform vec2 u_r;uniform vec2 u_m;'+
+  '#define PI 3.14159265\n'+
+  'float h(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5);}'+
+  'float n(vec3 p){vec3 i=floor(p);vec3 f=fract(p);vec3 u=f*f*(3.-2.*f);return mix(mix(mix(h(i),h(i+vec3(1,0,0)),u.x),mix(h(i+vec3(0,1,0)),h(i+vec3(1,1,0)),u.x),u.y),mix(mix(h(i+vec3(0,0,1)),h(i+vec3(1,0,1)),u.x),mix(h(i+vec3(0,1,1)),h(i+vec3(1,1,1)),u.x),u.y),u.z);}'+
+  'float fbm(vec3 p){float v=0.;float a=.5;for(int i=0;i<4;i++){v+=a*n(p);p=p*2.+vec3(1.7,9.2,3.4);a*=.5;}return v;}'+
+  'vec3 pal(float t){return vec3(.5)+vec3(.5)*cos(2.*PI*(vec3(1.)+t+vec3(.0,.33,.67)));}'+
+  'void main(){'+
+  'vec2 uv=gl_FragCoord.xy/u_r*2.-1.;uv.x*=u_r.x/u_r.y;'+
+  'vec2 m=(u_m/u_r-.5)*2.;m.x*=u_r.x/u_r.y;'+
+  'float t=u_t*.1;vec3 p=vec3(uv*.7,t);p+=m*.08;'+
+  'float n1=fbm(p),n2=fbm(p+vec3(n1*.8,n1*.5,t*.4)),n3=fbm(p+n1*.5+vec3(n2*.6,-n1*.4,t*.25));'+
+  'float c=fbm(vec3(uv*.5+n3*.35,t*.4));'+
+  'vec3 col=pal(c+t*.07)*vec3(.0,.8,.65)*.5+pal(n2+t*.1)*vec3(.4,.07,.85)*.3;'+
+  'col*=smoothstep(1.4,.1,length(uv*.65));'+
+  'gl_FragColor=vec4(col,1.);}';
+  function mkS(type: number, src: string){const s = gl.createShader(type); if(!s) return null; gl.shaderSource(s,src);gl.compileShader(s);return s;}
+  const prog = gl.createProgram(); if(!prog) return;
+  const vs = mkS(gl.VERTEX_SHADER,VS);
+  const fs = mkS(gl.FRAGMENT_SHADER,FS);
+  if(!vs || !fs) return;
+  gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);gl.useProgram(prog);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const aL=gl.getAttribLocation(prog,'a');gl.enableVertexAttribArray(aL);gl.vertexAttribPointer(aL,2,gl.FLOAT,false,0,0);
+  const uT=gl.getUniformLocation(prog,'u_t'),uR=gl.getUniformLocation(prog,'u_r'),uM=gl.getUniformLocation(prog,'u_m');
+  gl.uniform2f(uR,canvas.width,canvas.height);
+  let bx=innerWidth/2,by=innerHeight/2;
+  document.addEventListener('mousemove',e=>{bx=e.clientX;by=e.clientY;},{passive:true});
+  let last=0;(function loop(t){requestAnimationFrame(loop);if(t-last<50)return;last=t;
+    gl.uniform1f(uT,t*.001);gl.uniform2f(uM,bx,by);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  })(0);
+})();
+
+/* SPOTLIGHT */
+(function(){
+  const el=document.getElementById('spotlight');if(!el)return;
+  const SMAP: Record<string, string>={hero:'#00FFD1',services:'#6B17FF',about:'#1B8EFF',team:'#FF1F6E',work:'#1B8EFF',casestudy:'#1B8EFF',process:'#FF1F6E',testi:'#FFD100',awards:'#FFD100',tech:'#00FFD1',blog:'#6B17FF',pricing:'#00FFD1',faq:'#00FFD1',cta:'#00FFD1'};
+  let col='#00FFD1';
+  document.addEventListener('mousemove',e=>{
+    el.style.setProperty('--mx',e.clientX+'px');
+    el.style.setProperty('--my',e.clientY+'px');
+  },{passive:true});
+  Object.keys(SMAP).forEach(id=>{
+    const s=document.getElementById(id);
+    if(s){new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){col=SMAP[e.target.id]||col;
+          el.style.background='radial-gradient(600px circle at var(--mx,50%) var(--my,50%),'+col+'07,transparent 70%)';}
+      });
+    },{threshold:.2}).observe(s);}
+  });
+})();
+
+/* SCROLL PROGRESS */
+(function(){
+    const spbEl=document.getElementById('spb');
+    if(!spbEl) return;
+    let scrollRafPending=false;
+    window.addEventListener('scroll',()=>{
+    if(scrollRafPending)return;
+    scrollRafPending=true;
+    requestAnimationFrame(()=>{
+        scrollRafPending=false;
+        const sy=window.scrollY;
+        const max=Math.max(1,document.body.scrollHeight-innerHeight);
+        spbEl.style.transform='scaleX('+(sy/max)+')';
+    });
+    },{passive:true});
+})();
+</script>

@@ -1,0 +1,71 @@
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="n-logo">NEXUS</a>
+  <ul class="n-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#blog">Blog</a></li>
+  </ul>
+  <div class="n-right">
+    <div class="n-cmd-btn" id="n-search-btn"><span class="kbd">⌘K</span> Search</div>
+    <a href="#cta" class="n-cta"><span>Start Project ↗</span></a>
+  </div>
+  <div class="n-ham" id="n-ham-btn">
+    <span class="n-hl"></span><span class="n-hl"></span><span class="n-hl"></span>
+  </div>
+</nav>
+
+<script>
+const navEl=document.getElementById('nav');
+const searchBtn = document.getElementById('n-search-btn');
+const hamBtn = document.getElementById('n-ham-btn');
+let navSolid=false;
+
+window.addEventListener('scroll',()=>{
+    const sy=window.scrollY;
+    const s=sy>60;
+    if(s!==navSolid){
+        navSolid=s;
+        navEl?.classList.toggle('solid',s);
+    }
+},{passive:true});
+
+searchBtn?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('toggleCmd'));
+});
+
+hamBtn?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('openMob'));
+});
+
+// Active Link Observer
+const navLinks=document.querySelectorAll('.n-links a');
+document.querySelectorAll('section[id]').forEach(s=>{
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      navLinks.forEach(a=>a.classList.remove('active'));
+      const lk=document.querySelector('.n-links a[href="#'+e.target.id+'"]');
+      if(lk)lk.classList.add('active');
+    });
+  },{threshold:.3}).observe(s);
+});
+
+// Text scramble for logo
+const SC='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+function scramble(el: any, orig: string){
+  let f=0;
+  clearInterval(el._si);
+  el._si=setInterval(()=>{
+    f++;
+    el.textContent=orig.split('').map((c,i)=>{
+        if(c===' ')return ' ';
+        return i/orig.length<f/22?c:SC[Math.floor(Math.random()*SC.length)];
+    }).join('');
+    if(f>=22){el.textContent=orig;clearInterval(el._si);}
+  },40);
+}
+document.querySelectorAll('.n-logo').forEach((el: any)=>el.addEventListener('mouseenter',function(this: any){scramble(this,'NEXUS');}));
+</script>

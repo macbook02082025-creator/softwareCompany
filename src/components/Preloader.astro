@@ -1,0 +1,34 @@
+<div id="pl">
+  <div class="pl-logo">NEXUS</div>
+  <div class="pl-line"><div class="pl-fill" id="plf"></div></div>
+  <div class="pl-pct" id="plp">0%</div>
+  <div class="pl-status" id="plst">INITIALIZING CORE SYSTEMS</div>
+</div>
+
+<script>
+const STATUSES=['INITIALIZING CORE SYSTEMS','LOADING 3D ASSETS','CALIBRATING SHADERS','WARMING UP ML MODELS','DEPLOYING PRODUCTION BUILD','READY'];
+let lp=0;
+const plf=document.getElementById('plf');
+const plp=document.getElementById('plp');
+const plst=document.getElementById('plst');
+const plContainer = document.getElementById('pl');
+
+if (plf && plp && plst && plContainer) {
+    const lint=setInterval(()=>{
+    lp+=Math.random()*11+2;
+    if(lp>=100){
+        lp=100;
+        clearInterval(lint);
+        plst.textContent='READY';
+        setTimeout(()=>{
+            plContainer.classList.add('exit');
+            // Dispatch a custom event to notify other components that preloader is done
+            window.dispatchEvent(new CustomEvent('preloaderDone'));
+        },400);
+    }
+    plf.style.width=lp+'%';
+    plp.textContent=Math.floor(lp)+'%';
+    plst.textContent=STATUSES[Math.min(Math.floor(lp/17),5)];
+    },75);
+}
+</script>

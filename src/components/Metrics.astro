@@ -1,0 +1,157 @@
+<!-- LIVE METRICS DASHBOARD -->
+<section class="sec" id="metrics">
+  <div class="si">
+    <div class="ey rv">Performance</div>
+    <h2 class="st rv">LIVE <span class="ac">INFRASTRUCTURE</span></h2>
+    <p class="sec-sub rv" style="color:var(--muted);max-width:540px;line-height:1.8;font-size:.95rem;">Real-time telemetry across all production systems. Every number shown is from our actual infrastructure.</p>
+    <div class="metrics-grid rv">
+      <div class="metric-cell">
+        <div class="metric-cell-top"><div class="metric-icon">⚡</div><span class="metric-badge live">● Live</span></div>
+        <div class="metric-val" id="mv-rps">0</div>
+        <div class="metric-label">Requests / Second</div>
+        <canvas class="spark-canvas" id="spark1"></canvas>
+        <div class="metric-change pos" id="mc-rps">▲ +12.4% vs last hour</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell-top"><div class="metric-icon">🎯</div><span class="metric-badge up">↑ Optimal</span></div>
+        <div class="metric-val" id="mv-lat">0<span style="font-size:1.4rem;opacity:.6">ms</span></div>
+        <div class="metric-label">P99 API Latency</div>
+        <canvas class="spark-canvas" id="spark2"></canvas>
+        <div class="metric-change pos">▲ 94th percentile SLA met</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell-top"><div class="metric-icon">🛡️</div><span class="metric-badge live">● Live</span></div>
+        <div class="metric-val" id="mv-up">99.99<span style="font-size:1.4rem;opacity:.6">%</span></div>
+        <div class="metric-label">Global Uptime — 90 Days</div>
+        <div class="uptime-bars" id="uptime-bars"></div>
+      </div>
+      <div class="metric-cell wide">
+        <div class="metric-cell-top"><div class="metric-icon">🌐</div><span class="metric-badge hot">● Active</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem">
+          <div><div class="metric-val" id="mv-nodes">0</div><div class="metric-label">K8s Nodes</div></div>
+          <div><div class="metric-val" id="mv-deploy">0</div><div class="metric-label">Deployments Today</div></div>
+          <div><div class="metric-val" id="mv-ai">0<span style="font-size:1.4rem;opacity:.6">M</span></div><div class="metric-label">AI Inferences / Day</div></div>
+        </div>
+        <canvas class="spark-canvas" id="spark3" style="margin-top:1.2rem"></canvas>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell-top"><div class="metric-icon">💾</div><span class="metric-badge up">↑ Healthy</span></div>
+        <div class="metric-val" id="mv-tb">0<span style="font-size:1.4rem;opacity:.6">TB</span></div>
+        <div class="metric-label">Data Processed Today</div>
+        <canvas class="spark-canvas" id="spark4"></canvas>
+        <div class="metric-change pos">▲ +8.1% vs yesterday</div>
+      </div>
+    </div>
+    <div class="metrics-ticker rv">
+      <span class="ticker-label">System Health</span>
+      <div class="ticker-scroll">
+        <div class="ticker-inner" id="ticker-inner"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  // Animated counting values
+  function animVal(id: string, from: number, to: number, suffix: string, decimals: number){
+    const el=document.getElementById(id); if(!el)return;
+    const dur=2200, start=performance.now();
+    (function step(now){
+      const t=Math.min((now-start)/dur,1), ease=1-Math.pow(2,-10*t);
+      const v=from+(to-from)*ease;
+      (el.childNodes[0] as Text).textContent=(decimals?v.toFixed(decimals):Math.round(v))+suffix;
+      if(t<1)requestAnimationFrame(step);
+    })(start);
+  }
+
+  // Sparkline canvas
+  function drawSparkline(id: string, data: number[], color: string){
+    const cv = document.getElementById(id) as HTMLCanvasElement; if(!cv)return;
+    const ctx=cv.getContext('2d'); if(!ctx) return;
+    const W=cv.parentElement?.offsetWidth||300, H=44;
+    cv.width=W; cv.height=H;
+    const min=Math.min(...data), max=Math.max(...data);
+    const range=max-min||1;
+    const pts=data.map((v,i)=>({x:i/(data.length-1)*W, y:H-(v-min)/range*(H-6)-3}));
+    // Fill
+    const grad=ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,color+'44'); grad.addColorStop(1,color+'00');
+    ctx.beginPath(); ctx.moveTo(pts[0].x,H);
+    pts.forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.lineTo(pts[pts.length-1].x,H); ctx.closePath();
+    ctx.fillStyle=grad; ctx.fill();
+    // Line
+    ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+    ctx.strokeStyle=color; ctx.lineWidth=1.5; ctx.stroke();
+    // Dot at end
+    const last=pts[pts.length-1];
+    ctx.beginPath(); ctx.arc(last.x,last.y,3,0,Math.PI*2);
+    ctx.fillStyle=color; ctx.fill();
+  }
+
+  function randArr(len: number,min: number,max: number){return Array.from({length:len},()=>min+Math.random()*(max-min));}
+
+  // Observe metrics section, animate on entry
+  const metricsEl=document.getElementById('metrics');
+  if(!metricsEl)return;
+  new IntersectionObserver(entries=>entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    // Animate values
+    animVal('mv-rps',0,142800,'',0);
+    animVal('mv-lat',0,4,'',0);
+    animVal('mv-nodes',0,847,'',0);
+    animVal('mv-deploy',0,23,'',0);
+    animVal('mv-ai',0,184,'',0);
+    animVal('mv-tb',0,2.4,'',1);
+
+    // Sparklines
+    setTimeout(()=>{
+      drawSparkline('spark1',randArr(24,120000,165000),'#00FFD1');
+      drawSparkline('spark2',randArr(24,2,7),'#1B8EFF');
+      drawSparkline('spark3',randArr(24,800,1200),'#6B17FF');
+      drawSparkline('spark4',randArr(24,2,3),'#FFD100');
+    },400);
+
+    // Uptime bars
+    const barsEl=document.getElementById('uptime-bars');
+    if(barsEl){
+      barsEl.innerHTML = '';
+      for(let i=0;i<90;i++){
+        const b=document.createElement('div'); b.className='uptb';
+        const h=Math.random()>0.05?35+Math.random()*17:8+Math.random()*15;
+        const col=h>30?'#00FFD1':h>18?'#FFD100':'#FF1F6E';
+        b.style.cssText='height:2px;background:'+col+';';
+        barsEl.appendChild(b);
+        setTimeout(()=>{b.style.height=h+'px';},300+i*8);
+      }
+    }
+
+    // Live ticker
+    const tickerEl=document.getElementById('ticker-inner');
+    if(tickerEl){
+      const items=[
+        {sym:'API',price:'142k req/s',chg:'+12.4%',g:true},
+        {sym:'DB',price:'0.8ms avg',chg:'+0.1ms',g:false},
+        {sym:'CDN',price:'99.99%',chg:'↑ Optimal',g:true},
+        {sym:'ML',price:'184M inf/d',chg:'+22%',g:true},
+        {sym:'K8S',price:'847 nodes',chg:'+12 today',g:true},
+        {sym:'EDGE',price:'38 regions',chg:'All healthy',g:true},
+        {sym:'CACHE',price:'98.4% hit',chg:'+0.3%',g:true},
+        {sym:'QUEUE',price:'<1ms lag',chg:'● Live',g:true},
+      ];
+      const html=items.map(i=>'<span class="ticker-item"><span class="ticker-sym">'+i.sym+'</span><span class="ticker-price">'+i.price+'</span><span class="ticker-chg '+(i.g?'g':'r')+'">'+i.chg+'</span></span>').join('');
+      tickerEl.innerHTML=html+html; // duplicate for seamless loop
+    }
+  }),{threshold:.15}).observe(metricsEl);
+
+  // Live RPS counter fluctuation
+  let rpsBase=142800;
+  setInterval(()=>{
+    rpsBase+=Math.round((Math.random()-.48)*1200);
+    rpsBase=Math.max(130000,Math.min(160000,rpsBase));
+    const el=document.getElementById('mv-rps');
+    if(el && el.childNodes[0]) (el.childNodes[0] as Text).textContent=rpsBase.toLocaleString();
+  },2000);
+})();
+</script>

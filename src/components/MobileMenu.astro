@@ -1,0 +1,29 @@
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mob">
+  <button class="mob-close" id="mob-close-btn">✕</button>
+  <a href="#services" class="mob-link">Services</a>
+  <a href="#about" class="mob-link">About</a>
+  <a href="#team" class="mob-link">Team</a>
+  <a href="#work" class="mob-link">Work</a>
+  <a href="#process" class="mob-link">Process</a>
+  <a href="#blog" class="mob-link">Blog</a>
+  <a href="#cta" class="mob-link">Contact</a>
+</div>
+
+<script>
+const mob = document.getElementById('mob');
+const mobCloseBtn = document.getElementById('mob-close-btn');
+const mobLinks = document.querySelectorAll('.mob-link');
+
+function closeMob(){mob?.classList.remove('open');}
+
+mobCloseBtn?.addEventListener('click', closeMob);
+mobLinks.forEach(link => {
+    link.addEventListener('click', closeMob);
+});
+
+// Listen for global open event
+window.addEventListener('openMob', () => {
+    mob?.classList.add('open');
+});
+</script>

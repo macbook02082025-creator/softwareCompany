@@ -1,0 +1,16 @@
+<!-- CLIENT LOGOS -->
+<section id="clients">
+  <p class="clients-label">Trusted by engineering teams at the world's most ambitious companies</p>
+  <div class="logos-track">
+    <div class="logos-row" id="logos-row"></div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const row=document.getElementById('logos-row'); if(!row)return;
+  const logos=['STRIPE','OPENAI','AIRBNB','NOTION','FIGMA','LINEAR','VERCEL','SHOPIFY','DATABRICKS','SNOWFLAKE','PALANTIR','PLAID','DATADOG','HASHICORP','CONFLUENT'];
+  const html=logos.map(l=>'<div class="logo-item"><span class="logo-wordmark">'+l+'</span></div>').join('');
+  row.innerHTML=html+html; // duplicate for seamless scroll
+})();
+</script>

@@ -1,0 +1,92 @@
+<div id="cmd-overlay">
+  <div id="cmd-box">
+    <div id="cmd-input-wrap">
+      <svg id="cmd-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>
+      <input id="cmd-input" placeholder="Type a command or search…" autocomplete="off" spellcheck="false"/>
+      <span id="cmd-hint">ESC</span>
+    </div>
+    <div id="cmd-results">
+      <div class="cmd-group">
+        <div class="cmd-group-label">Navigate</div>
+        <div class="cmd-item" data-name="services what we engineer capabilities" data-action="scroll" data-target="#services"><div class="cmd-item-ico">⚙️</div><div class="cmd-item-main"><div class="cmd-item-name">Services</div><div class="cmd-item-desc">What we engineer</div></div><span class="cmd-item-badge">Section</span></div>
+        <div class="cmd-item" data-name="about mission values studio" data-action="scroll" data-target="#about"><div class="cmd-item-ico">🌐</div><div class="cmd-item-main"><div class="cmd-item-name">About</div><div class="cmd-item-desc">Our mission & values</div></div><span class="cmd-item-badge">Section</span></div>
+        <div class="cmd-item" data-name="team people engineers" data-action="scroll" data-target="#team"><div class="cmd-item-ico">👥</div><div class="cmd-item-main"><div class="cmd-item-name">Team</div><div class="cmd-item-desc">Meet the engineers</div></div><span class="cmd-item-badge">Section</span></div>
+        <div class="cmd-item" data-name="work portfolio case studies projects" data-action="scroll" data-target="#work"><div class="cmd-item-ico">🗂</div><div class="cmd-item-main"><div class="cmd-item-name">Work</div><div class="cmd-item-desc">Selected portfolio</div></div><span class="cmd-item-badge">Section</span></div>
+        <div class="cmd-item" data-name="process how we build methodology" data-action="scroll" data-target="#process"><div class="cmd-item-ico">🔁</div><div class="cmd-item-main"><div class="cmd-item-name">Process</div><div class="cmd-item-desc">How we build</div></div><span class="cmd-item-badge">Section</span></div>
+        <div class="cmd-item" data-name="blog insights articles" data-action="scroll" data-target="#blog"><div class="cmd-item-ico">📝</div><div class="cmd-item-main"><div class="cmd-item-name">Blog</div><div class="cmd-item-desc">Latest insights</div></div><span class="cmd-item-badge">Section</span></div>
+        <div class="cmd-item" data-name="pricing engagement models cost" data-action="scroll" data-target="#pricing"><div class="cmd-item-ico">💎</div><div class="cmd-item-main"><div class="cmd-item-name">Engagement Models</div><div class="cmd-item-desc">How to work with us</div></div><span class="cmd-item-badge">Section</span></div>
+        <div class="cmd-item" data-name="faq questions answers" data-action="scroll" data-target="#faq"><div class="cmd-item-ico">❓</div><div class="cmd-item-main"><div class="cmd-item-name">FAQ</div><div class="cmd-item-desc">Common questions</div></div><span class="cmd-item-badge">Section</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="cmd-group-label">Actions</div>
+        <div class="cmd-item" data-name="start project contact cta" data-action="scroll" data-target="#cta"><div class="cmd-item-ico">🚀</div><div class="cmd-item-main"><div class="cmd-item-name">Start a Project</div><div class="cmd-item-desc">Let's build something legendary</div></div><span class="cmd-item-badge">↵</span></div>
+        <div class="cmd-item" data-name="copy email contact" data-action="email"><div class="cmd-item-ico">📋</div><div class="cmd-item-main"><div class="cmd-item-name">Copy Email</div><div class="cmd-item-desc">hello@nexus.studio</div></div></div>
+      </div>
+    </div>
+    <div id="cmd-footer">
+      <div class="cmd-key-hint"><span class="cmd-k">↑↓</span> Navigate</div>
+      <div class="cmd-key-hint"><span class="cmd-k">↵</span> Select</div>
+      <div class="cmd-key-hint"><span class="cmd-k">ESC</span> Close</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cmdOv=document.getElementById('cmd-overlay'),cmdInp=document.getElementById('cmd-input') as HTMLInputElement;
+let cIdx=0;
+const cItems=document.querySelectorAll('.cmd-item');
+
+function toggleCmd(){cmdOv?.classList.contains('open')?closeCmd():openCmd();}
+function openCmd(){cmdOv?.classList.add('open');cmdInp?.focus();if(cmdInp)cmdInp.value='';filterCmd('');cIdx=0;updateCmdActive();}
+function closeCmd(){cmdOv?.classList.remove('open');}
+
+cmdOv?.addEventListener('click',e=>{if(e.target===cmdOv)closeCmd();});
+cmdInp?.addEventListener('input',()=>filterCmd(cmdInp.value.toLowerCase()));
+
+function filterCmd(q: string){
+    cItems.forEach((i: any)=>{
+        i.style.display=(!q||(i.dataset.name||'').toLowerCase().includes(q))?'flex':'none';
+    });
+    cIdx=0;
+    updateCmdActive();
+}
+
+function updateCmdActive(){
+    const v=[...cItems].filter((i: any)=>i.style.display!=='none');
+    v.forEach((i,x)=>i.classList.toggle('active',x===cIdx));
+}
+
+cmdInp?.addEventListener('keydown',e=>{
+  const v=[...cItems].filter((i: any)=>i.style.display!=='none');
+  if(e.key==='ArrowDown'){e.preventDefault();cIdx=Math.min(cIdx+1,v.length-1);updateCmdActive();}
+  if(e.key==='ArrowUp'){e.preventDefault();cIdx=Math.max(cIdx-1,0);updateCmdActive();}
+  if(e.key==='Enter'){e.preventDefault();(v[cIdx] as any)?.click();}
+});
+
+cItems.forEach((item: any)=>{
+  item.addEventListener('click',()=>{
+    if(item.dataset.action==='scroll'){
+        closeCmd();
+        setTimeout(()=>document.querySelector(item.dataset.target)?.scrollIntoView({behavior:'smooth'}),200);
+    }
+    else if(item.dataset.action==='email'){
+        closeCmd();
+        navigator.clipboard?.writeText('hello@nexus.studio').catch(()=>{});
+        window.dispatchEvent(new CustomEvent('showToast', { detail: { msg: '📋 Email copied!', col: '#00FFD1' } }));
+    }
+  });
+  item.addEventListener('mouseenter',()=>{
+    const v=[...cItems].filter((i: any)=>i.style.display!=='none');
+    cIdx=v.indexOf(item);
+    updateCmdActive();
+  });
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeCmd();}
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();toggleCmd();}
+});
+
+// Listen for global toggle event
+window.addEventListener('toggleCmd', toggleCmd);
+</script>
