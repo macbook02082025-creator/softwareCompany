@@ -14,20 +14,22 @@ const { title = "NEXUS — Engineered for the Future" } = Astro.props;
 </head>
 <body>
     <slot />
-    <script is:inline>
+    <script>
+        // Use a more standard Astro script block for better bundling
         const rvObs = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) e.target.classList.add('in');
             });
         }, { threshold: 0.07 });
 
-        function observeRVs() {
+        const observe = () => {
             document.querySelectorAll('.rv').forEach(r => rvObs.observe(r));
-        }
+        };
 
-        observeRVs();
+        observe();
 
-        const observer = new MutationObserver(observeRVs);
+        // Re-observe if components are added (useful for some Astro setups)
+        const observer = new MutationObserver(observe);
         observer.observe(document.body, { childList: true, subtree: true });
     </script>
 </body>
