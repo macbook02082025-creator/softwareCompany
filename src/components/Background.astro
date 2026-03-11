@@ -60,7 +60,7 @@
     if(s){new IntersectionObserver(entries=>{
       entries.forEach(e=>{
         if(e.isIntersecting){col=SMAP[e.target.id]||col;
-          el.style.background='radial-gradient(600px circle at var(--mx,50%) var(--my,50%),'+col+'07,transparent 70%)';}
+          if(el) el.style.background='radial-gradient(600px circle at var(--mx,50%) var(--my,50%),'+col+'07,transparent 70%)';}
       });
     },{threshold:.2}).observe(s);}
   });
