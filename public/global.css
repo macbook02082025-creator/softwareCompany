@@ -16,6 +16,8 @@
   grid-template-columns: repeat(12, 1fr);
   gap: 1.5rem;
 }
+
+/* Advanced Spotlight Card */
 .bento-card {
   background: var(--glass);
   border: 1px solid var(--border);
@@ -24,11 +26,49 @@
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(12px);
-  transition: transform .6s var(--expo), border-color .4s ease;
+  transition: transform .6s var(--expo), border-color .4s ease, box-shadow .6s var(--expo);
+}
+.bento-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(0, 255, 209, 0.4),
+    transparent 40%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.bento-card:hover::before {
+  opacity: 1;
 }
 .bento-card:hover {
-  border-color: rgba(0, 255, 209, 0.25);
+  border-color: rgba(0, 255, 209, 0.3);
   transform: translateY(-5px);
+  box-shadow: 0 20px 40px -20px rgba(0, 255, 209, 0.15);
+}
+
+/* Magnetic Button Utility */
+.magnetic-btn {
+  display: inline-flex;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+  will-change: transform;
+}
+
+/* Typography Refinements */
+h1, h2, h3, .st, .hero-h {
+  letter-spacing: -0.02em; /* Tighter tracking for large headers */
 }
 
 .glass-panel {
