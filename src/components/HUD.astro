@@ -1,0 +1,147 @@
+---
+---
+<!-- HUD — PERSISTENT INTERFACE LAYER -->
+<div id="hud">
+  <!-- Corner Markers -->
+  <div class="hud-corner top-l">
+    <div class="hud-line-h"></div>
+    <div class="hud-line-v"></div>
+    <div class="hud-tag">NXS_UI // 5.2.0</div>
+  </div>
+  <div class="hud-corner top-r">
+    <div class="hud-line-h"></div>
+    <div class="hud-line-v"></div>
+    <div class="hud-tag" id="hud-time">00:00:00</div>
+  </div>
+  <div class="hud-corner bot-l">
+    <div class="hud-line-h"></div>
+    <div class="hud-line-v"></div>
+    <div class="hud-tag">STABLE_CON // 99.9%</div>
+  </div>
+  <div class="hud-corner bot-r">
+    <div class="hud-line-h"></div>
+    <div class="hud-line-v"></div>
+    <div class="hud-tag">SECURE_LINK // RSA_4096</div>
+  </div>
+
+  <!-- Side Borders with Data -->
+  <div class="hud-side left">
+    <div class="hud-side-line"></div>
+    <div class="hud-data-track">
+      <div class="hud-data-bit">ARCH</div>
+      <div class="hud-data-bit">SYNC</div>
+      <div class="hud-data-bit">NODE</div>
+      <div class="hud-data-bit">ENCR</div>
+    </div>
+  </div>
+  <div class="hud-side right">
+    <div class="hud-side-line"></div>
+    <div class="hud-data-track">
+      <div class="hud-data-bit">01</div>
+      <div class="hud-data-bit">02</div>
+      <div class="hud-data-bit">03</div>
+      <div class="hud-data-bit">04</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #hud {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    pointer-events: none;
+    padding: 1.5rem;
+    opacity: 0.4;
+    transition: opacity 1s var(--expo);
+  }
+  
+  .hud-corner {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+  }
+  .top-l { top: 1.5rem; left: 1.5rem; }
+  .top-r { top: 1.5rem; right: 1.5rem; text-align: right; }
+  .bot-l { bottom: 1.5rem; left: 1.5rem; }
+  .bot-r { bottom: 1.5rem; right: 1.5rem; text-align: right; }
+
+  .hud-line-h {
+    position: absolute;
+    height: 1px;
+    width: 40px;
+    background: var(--c1);
+    top: 0;
+  }
+  .hud-line-v {
+    position: absolute;
+    width: 1px;
+    height: 40px;
+    background: var(--c1);
+    left: 0;
+  }
+  .top-r .hud-line-h, .bot-r .hud-line-h { right: 0; }
+  .top-r .hud-line-v, .bot-r .hud-line-v { right: 0; left: auto; }
+  .bot-l .hud-line-h, .bot-r .hud-line-h { top: auto; bottom: 0; }
+  .bot-l .hud-line-v, .bot-r .hud-line-v { top: auto; bottom: 0; }
+
+  .hud-tag {
+    position: absolute;
+    font-family: var(--fm);
+    font-size: 0.5rem;
+    color: var(--c1);
+    letter-spacing: 0.1em;
+    width: 150px;
+  }
+  .top-l .hud-tag { top: 10px; left: 10px; }
+  .top-r .hud-tag { top: 10px; right: 10px; }
+  .bot-l .hud-tag { bottom: 10px; left: 10px; }
+  .bot-r .hud-tag { bottom: 10px; right: 10px; }
+
+  .hud-side {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .left { left: 1.5rem; }
+  .right { right: 1.5rem; }
+
+  .hud-side-line {
+    height: 150px;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--c1), transparent);
+  }
+
+  .hud-data-track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .hud-data-bit {
+    font-family: var(--fm);
+    font-size: 0.45rem;
+    color: var(--dim);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  @media (max-width: 900px) {
+    #hud { display: none; }
+  }
+</style>
+
+<script>
+  const updateHUD = () => {
+    const timeEl = document.getElementById('hud-time');
+    if (timeEl) {
+      const now = new Date();
+      timeEl.textContent = now.toTimeString().split(' ')[0];
+    }
+  };
+  setInterval(updateHUD, 1000);
+  updateHUD();
+</script>

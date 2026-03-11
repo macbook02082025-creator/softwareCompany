@@ -1,3 +1,7 @@
+---
+import { jobs } from '../data/jobs';
+import JobModal from './JobModal.astro';
+---
 <!-- CAREERS -->
 <section class="sec" id="careers">
   <div class="si">
@@ -9,21 +13,86 @@
         <p>We don't hire for headcount. We hire when we find exceptional people — those who've already built something remarkable and are ready to build at a different scale.</p>
         <p style="font-size:.85rem;color:var(--muted)">Remote-first. Equity-heavy. Async-preferred. We believe the best work happens when talented people have real autonomy over their time and tools.</p>
         <div class="perks-grid">
-          <div class="perk"><span class="perk-icon">💰</span><div><div class="perk-title">Top 1% Compensation</div><div class="perk-desc">Salary + meaningful equity. We benchmark against the highest-paying companies.</div></div></div>
-          <div class="perk"><span class="perk-icon">🌍</span><div><div class="perk-title">Fully Remote</div><div class="perk-desc">Work from anywhere. Async-first culture with optional hubs in SF, London, Singapore.</div></div></div>
-          <div class="perk"><span class="perk-icon">📈</span><div><div class="perk-title">Fast Growth</div><div class="perk-desc">Lead projects from day one. No hierarchy between you and the hardest problems.</div></div></div>
-          <div class="perk"><span class="perk-icon">🎓</span><div><div class="perk-title">$10k / Year Learning</div><div class="perk-desc">Conferences, courses, hardware — no approval needed under budget.</div></div></div>
+          <div class="perk"><span class="perk-icon">💰</span><div><div class="perk-title">Top 1% Compensation</div><div class="perk-desc">Competitive base + meaningful equity. We benchmark against the highest-paying companies.</div></div></div>
+          <div class="perk"><span class="perk-icon">🌍</span><div><div class="perk-title">Fully Remote</div><div class="perk-desc">Work from anywhere. Async-first culture with optional hubs in global tech capitals.</div></div></div>
+          <div class="perk"><span class="perk-icon">🎓</span><div><div class="perk-title">₹8 Lakhs / Year Learning</div><div class="perk-desc">Conferences, courses, hardware — no approval needed under budget.</div></div></div>
         </div>
       </div>
+      
       <div class="rv d1">
         <div class="jobs-list">
-          <div class="job-card"><div><div class="job-dept">Engineering</div><div class="job-title">Staff Infrastructure Engineer</div><div class="job-meta"><span class="job-tag">Remote</span><span class="job-tag">Full-time</span><span class="job-tag">$280–380k + equity</span></div></div><div class="job-arrow">→</div></div>
-          <div class="job-card"><div><div class="job-dept">AI / ML</div><div class="job-title">Principal ML Engineer — LLM Systems</div><div class="job-meta"><span class="job-tag">Remote</span><span class="job-tag">Full-time</span><span class="job-tag">$300–420k + equity</span></div></div><div class="job-arrow">→</div></div>
-          <div class="job-card"><div><div class="job-dept">Product Design</div><div class="job-title">Lead Product Designer</div><div class="job-meta"><span class="job-tag">Remote</span><span class="job-tag">Full-time</span><span class="job-tag">$200–280k + equity</span></div></div><div class="job-arrow">→</div></div>
-          <div class="job-card"><div><div class="job-dept">Engineering</div><div class="job-title">Senior Backend Engineer — Distributed Systems</div><div class="job-meta"><span class="job-tag">Remote</span><span class="job-tag">Full-time</span><span class="job-tag">$240–320k + equity</span></div></div><div class="job-arrow">→</div></div>
-          <div class="job-card"><div><div class="job-dept">Security</div><div class="job-title">Staff Security Engineer</div><div class="job-meta"><span class="job-tag">Remote</span><span class="job-tag">Full-time</span><span class="job-tag">$260–360k + equity</span></div></div><div class="job-arrow">→</div></div>
+          {jobs.map((job) => (
+            <button class="job-card-trigger" data-id={job.id}>
+              <div class="job-card">
+                <div>
+                  <div class="job-dept">{job.dept}</div>
+                  <div class="job-title">{job.title}</div>
+                  <div class="job-meta">
+                    <span class="job-tag">{job.location}</span>
+                    <span class="job-tag">{job.type}</span>
+                    <span class="job-tag highlight">{job.salary}</span>
+                  </div>
+                </div>
+                <div class="job-arrow">OPEN_INTEL →</div>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<JobModal />
+
+<style>
+  .job-card-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    cursor: pointer;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+  .job-card {
+    transition: all 0.4s var(--expo);
+  }
+  .job-card-trigger:hover .job-card {
+    border-color: var(--c1);
+    background: rgba(0, 255, 209, 0.02);
+    transform: translateX(10px);
+  }
+  .job-tag.highlight {
+    color: var(--c1);
+    border-color: rgba(0, 255, 209, 0.2);
+  }
+  .job-arrow {
+    font-family: var(--fm);
+    font-size: 0.6rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    transition: color 0.3s;
+  }
+  .job-card-trigger:hover .job-arrow {
+    color: var(--c1);
+  }
+</style>
+
+<script>
+  function initJobTriggers() {
+    document.querySelectorAll('.job-card-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id;
+        window.dispatchEvent(new CustomEvent('openJob', { detail: { id } }));
+      });
+    });
+  }
+
+  // Init on load
+  initJobTriggers();
+  // Re-init on navigation
+  document.addEventListener('astro:after-swap', initJobTriggers);
+</script>

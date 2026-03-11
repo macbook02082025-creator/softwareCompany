@@ -1,0 +1,299 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Background from '../../components/Background.astro';
+import Cursor from '../../components/Cursor.astro';
+import HUD from '../../components/HUD.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import { jobs } from '../../data/jobs';
+
+export function getStaticPaths() {
+  return jobs.map((job) => ({
+    params: { slug: job.id },
+    props: { job },
+  }));
+}
+
+const { job } = Astro.props;
+---
+
+<BaseLayout title={`${job.title} — NEXUS Careers`}>
+  <HUD />
+  <Cursor />
+  <Navbar />
+
+  <Background />
+  <div class="scanline"></div>
+
+  <main class="job-detail-page">
+    <section class="sec">
+      <div class="si">
+        <a href="/careers" class="back-link rv">
+          <span class="back-ico">←</span>
+          <span class="back-txt">RETURN_TO_BASE</span>
+        </a>
+        
+        <div class="job-header rv d1">
+          <div class="job-dept-tag">// SECTOR: {job.dept.toUpperCase()}</div>
+          <h1 class="st">{job.title}</h1>
+          
+          <div class="job-meta-advanced">
+            <div class="meta-box">
+              <div class="meta-label">Uptime_Required</div>
+              <div class="meta-val">{job.type}</div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">Node_Location</div>
+              <div class="meta-val">{job.location}</div>
+            </div>
+            <div class="meta-box highlight">
+              <div class="meta-label">Energy_Credits</div>
+              <div class="meta-val">{job.salary}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="job-layout-grid">
+          <div class="job-intel rv d2">
+            <div class="intel-block">
+              <div class="intel-hdr"><span>01</span> Mission_Briefing</div>
+              <p class="intel-text">{job.description}</p>
+            </div>
+
+            <div class="intel-block">
+              <div class="intel-hdr"><span>02</span> Technical_Loadout</div>
+              <ul class="intel-list">
+                {job.requirements.map(req => <li>{req}</li>)}
+              </ul>
+            </div>
+
+            <div class="intel-block">
+              <div class="intel-hdr"><span>03</span> Operational_Directives</div>
+              <ul class="intel-list">
+                {job.responsibilities.map(res => <li>{res}</li>)}
+              </ul>
+            </div>
+          </div>
+
+          <div class="apply-container rv d3">
+            <div class="apply-terminal glass-panel">
+              <div class="term-header">
+                <div class="term-dots"><span></span><span></span><span></span></div>
+                <div class="term-title">nexus_apply_v2.0.sh</div>
+              </div>
+              
+              <div class="term-body">
+                <form id="apply-form" class="job-form">
+                  <div class="input-row">
+                    <div class="field">
+                      <label>USER_ID</label>
+                      <input type="text" name="name" placeholder="John Doe" required />
+                    </div>
+                    <div class="field">
+                      <label>SECURE_COMMS</label>
+                      <input type="email" name="email" placeholder="email@proxy.net" required />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label>EXTERNAL_REPOS</label>
+                    <input type="url" name="links" placeholder="https://github.com/..." />
+                  </div>
+
+                  <div class="field">
+                    <label>CORE_INTEL (RESUME_PDF)</label>
+                    <label class="custom-file-upload">
+                      <input type="file" id="resume" name="resume" accept=".pdf" required />
+                      <span id="file-label">SELECT_SOURCE_FILE</span>
+                    </label>
+                  </div>
+
+                  <div class="field">
+                    <label>ADDITIONAL_PARMETERS</label>
+                    <textarea name="message" rows="3" placeholder="Initialize transmission context..."></textarea>
+                  </div>
+
+                  <button type="submit" class="pbtn magnetic-btn apply-btn">
+                    <span>TRANSMIT_APPLICATION</span>
+                  </button>
+                </form>
+                <div id="form-log" class="form-log"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .job-detail-page {
+    padding-top: 140px;
+    position: relative;
+    min-height: 100vh;
+  }
+  
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    font-family: var(--fm);
+    font-size: 0.7rem;
+    color: var(--c1);
+    margin-bottom: 4rem;
+    transition: transform 0.4s var(--expo);
+  }
+  .back-link:hover {
+    transform: translateX(-10px);
+    color: #fff;
+  }
+
+  .job-header {
+    margin-bottom: 8rem;
+  }
+  .job-dept-tag {
+    font-family: var(--fm);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--dim);
+    margin-bottom: 1.5rem;
+  }
+  
+  .job-meta-advanced {
+    display: flex;
+    gap: 2px;
+    margin-top: 4rem;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .meta-box {
+    flex: 1;
+    background: var(--void);
+    padding: 2rem;
+    transition: background 0.3s;
+  }
+  .meta-box:hover { background: rgba(255,255,255,0.02); }
+  .meta-box.highlight { border-left: 1px solid var(--border); }
+  .meta-box.highlight .meta-val { color: var(--c1); }
+  
+  .meta-label {
+    font-family: var(--fm);
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    margin-bottom: 0.8rem;
+  }
+  .meta-val {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .job-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: 10vw;
+    align-items: start;
+  }
+
+  .intel-block { margin-bottom: 6rem; }
+  .intel-hdr {
+    font-family: var(--fd);
+    font-size: 1.8rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: #fff;
+  }
+  .intel-hdr span {
+    font-family: var(--fm);
+    font-size: 0.8rem;
+    color: var(--c1);
+    border: 1px solid var(--c1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+  .intel-text {
+    font-size: 1.15rem; line-height: 1.8; color: var(--muted); max-width: 720px;
+  }
+  .intel-list {
+    list-style: none; display: flex; flex-direction: column; gap: 1.5rem;
+  }
+  .intel-list li {
+    position: relative; padding-left: 2.5rem; font-size: 1.05rem; color: var(--muted); line-height: 1.6;
+  }
+  .intel-list li::before {
+    content: '0x'; position: absolute; left: 0; font-family: var(--fm); font-size: 0.7rem; color: var(--dim); top: 0.3rem;
+  }
+
+  .apply-terminal { border-radius: 12px; overflow: hidden; position: sticky; top: 120px; }
+  .term-header { background: rgba(255,255,255,0.05); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .term-dots { display: flex; gap: 0.5rem; }
+  .term-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+  .term-title { font-family: var(--fm); font-size: 0.6rem; color: var(--muted); }
+  
+  .term-body { padding: 2.5rem; }
+  .job-form { display: flex; flex-direction: column; gap: 2rem; }
+  .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .field { display: flex; flex-direction: column; gap: 0.8rem; }
+  .field label { font-family: var(--fm); font-size: 0.55rem; color: var(--dim); letter-spacing: 0.15em; }
+  .field input, .field textarea { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 1rem; color: #fff; font-family: var(--fm); font-size: 0.8rem; border-radius: 4px; }
+  .field input:focus { border-color: var(--c1); outline: none; }
+
+  .custom-file-upload { cursor: pointer; border: 1px dashed var(--border); padding: 2rem; text-align: center; border-radius: 4px; transition: all 0.3s; }
+  .custom-file-upload input { display: none; }
+  .custom-file-upload span { font-family: var(--fm); font-size: 0.7rem; color: var(--dim); }
+  .custom-file-upload:hover { border-color: var(--c1); background: rgba(0,255,209,0.02); }
+  .custom-file-upload:hover span { color: var(--c1); }
+
+  .apply-btn { width: 100%; justify-content: center; }
+  
+  .form-log { margin-top: 2rem; font-family: var(--fm); font-size: 0.6rem; color: var(--c1); min-height: 1em; }
+
+  @media (max-width: 1200px) {
+    .job-layout-grid { grid-template-columns: 1fr; gap: 6rem; }
+    .apply-terminal { position: static; }
+  }
+  @media (max-width: 640px) {
+    .input-row { grid-template-columns: 1fr; }
+    .job-meta-advanced { flex-direction: column; }
+  }
+</style>
+
+<script>
+  // Career Page Logic
+  const form = document.getElementById('apply-form') as HTMLFormElement;
+  const log = document.getElementById('form-log');
+  const fileInput = document.getElementById('resume') as HTMLInputElement;
+  const fileLabel = document.getElementById('file-label');
+
+  if (form && log) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      log.textContent = '> INITIALIZING_ENCRYPTED_HANDSHAKE...';
+      await new Promise(res => setTimeout(res, 800));
+      log.textContent = '> UPLOADING_INTEL_BLOCKS... [42%]';
+      await new Promise(res => setTimeout(res, 1000));
+      log.textContent = '> TRANSMISSION_COMPLETE. IDENTITY_SECURED.';
+      form.reset();
+      if(fileLabel) fileLabel.textContent = 'SELECT_SOURCE_FILE';
+    });
+  }
+
+  if (fileInput && fileLabel) {
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files.length > 0) {
+        fileLabel.textContent = `FILE_READY: ${fileInput.files[0].name.toUpperCase()}`;
+        fileLabel.parentElement!.style.borderColor = 'var(--c1)';
+      }
+    });
+  }
+</script>

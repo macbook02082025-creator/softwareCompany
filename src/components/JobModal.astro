@@ -1,0 +1,282 @@
+---
+import { jobs } from '../data/jobs';
+---
+<!-- JOB INTELLIGENCE MODAL -->
+<div id="job-modal" class="modal-overlay">
+  <div id="job-modal-box" class="glass-panel">
+    <button id="job-modal-close" class="modal-close-btn">✕</button>
+    
+    <div id="job-view-content">
+      <!-- Description Layer (Default) -->
+      <div id="job-desc-layer">
+        <div class="modal-header">
+          <div id="modal-dept" class="modal-tag">// SECTOR: ENGINEERING</div>
+          <h2 id="modal-title" class="st">STAFF INFRASTRUCTURE ENGINEER</h2>
+          <div class="modal-meta-row">
+            <div class="m-meta">
+              <span class="m-label">Location</span>
+              <span id="modal-loc" class="m-val">Remote</span>
+            </div>
+            <div class="m-meta">
+              <span class="m-label">Type</span>
+              <span id="modal-type" class="m-val">Full-time</span>
+            </div>
+            <div class="m-meta">
+              <span class="m-label">Compensation</span>
+              <span id="modal-salary" class="m-val highlight">₹2.4Cr - ₹3.2Cr</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body-scroll">
+          <div class="m-section">
+            <h3>01_POSITION_OVERVIEW</h3>
+            <p id="modal-text">Lead the design and evolution of our global edge-compute platform...</p>
+          </div>
+          <div class="m-section">
+            <h3>02_REQUIREMENTS</h3>
+            <ul id="modal-reqs" class="m-list"></ul>
+          </div>
+          <div class="m-section">
+            <h3>03_RESPONSIBILITIES</h3>
+            <ul id="modal-resps" class="m-list"></ul>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="initiate-apply-btn" class="pbtn magnetic-btn">
+            <span>INITIATE_APPLICATION</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Application Layer (Hidden by default) -->
+      <div id="job-apply-layer" class="hidden">
+        <div class="modal-header">
+          <div class="modal-tag">// SECURE_TRANSMISSION_PROTOCOL</div>
+          <h2 class="st">SUBMIT_INTEL</h2>
+          <p class="m-sub">Complete the fields below to synchronize your profile with our database.</p>
+        </div>
+
+        <form id="apply-form" class="m-form">
+          <div class="form-grid">
+            <div class="field">
+              <label>FULL_NAME</label>
+              <input type="text" name="name" placeholder="John Doe" required />
+            </div>
+            <div class="field">
+              <label>EMAIL_ADDRESS</label>
+              <input type="email" name="email" placeholder="email@address.com" required />
+            </div>
+            <div class="field">
+              <label>MOBILE_NUMBER (REQ)</label>
+              <input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required />
+            </div>
+            <div class="field">
+              <label>DIGITAL_TRAILS (Portfolio/GH)</label>
+              <input type="url" name="links" placeholder="https://..." />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>CORE_INTEL (RESUME_PDF)</label>
+            <label class="m-file-input">
+              <input type="file" id="resume-upload" name="resume" accept=".pdf" required />
+              <span id="file-status">ATTACH_SOURCE_FILE (PDF)</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label>ADDITIONAL_DATA</label>
+            <textarea name="message" rows="3" placeholder="Contextualize your application..."></textarea>
+          </div>
+
+          <div class="modal-footer-alt">
+            <button type="button" id="back-to-desc" class="m-back-btn">← CANCEL</button>
+            <button type="submit" class="pbtn magnetic-btn">
+              <span>TRANSMIT_DATA</span>
+            </button>
+          </div>
+        </form>
+        <div id="m-form-log" class="m-log"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,5,0.9); backdrop-filter: blur(20px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem; opacity: 0; pointer-events: none;
+    transition: opacity 0.5s var(--expo);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  
+  #job-modal-box {
+    width: min(1000px, 100%); max-height: 90vh;
+    background: linear-gradient(160deg, var(--void) 0%, rgba(15,15,20,0.98) 100%);
+    border-radius: 24px; padding: 4rem; position: relative;
+    transform: translateY(40px) scale(0.95);
+    transition: transform 0.6s var(--spring);
+    overflow-y: auto;
+  }
+  .modal-overlay.open #job-modal-box { transform: translateY(0) scale(1); }
+
+  .modal-close-btn {
+    position: absolute; top: 2rem; right: 2.5rem;
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); width: 44px; height: 44px; border-radius: 50%;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .modal-close-btn:hover { border-color: var(--c3); color: var(--c3); transform: rotate(90deg); }
+
+  .modal-tag { font-family: var(--fm); font-size: 0.65rem; color: var(--dim); letter-spacing: 0.2em; margin-bottom: 1.5rem; }
+  .modal-header .st { font-size: 3.5rem; margin-bottom: 2rem; }
+  
+  .modal-meta-row { display: flex; gap: 4rem; padding: 2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+  .m-meta { display: flex; flex-direction: column; gap: 0.5rem; }
+  .m-label { font-family: var(--fm); font-size: 0.55rem; color: var(--dim); text-transform: uppercase; }
+  .m-val { font-size: 1.1rem; font-weight: 600; color: #fff; }
+  .m-val.highlight { color: var(--c1); }
+
+  .m-section { margin-bottom: 4rem; }
+  .m-section h3 { font-family: var(--fm); font-size: 0.7rem; color: var(--c1); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .m-section h3::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .m-section p { font-size: 1.1rem; line-height: 1.8; color: var(--muted); }
+  .m-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+  .m-list li { position: relative; padding-left: 2rem; color: var(--muted); font-size: 1rem; line-height: 1.6; }
+  .m-list li::before { content: '//'; position: absolute; left: 0; color: var(--dim); font-family: var(--fm); font-size: 0.8rem; }
+
+  .hidden { display: none !important; }
+  .m-sub { font-size: 1rem; color: var(--muted); margin-bottom: 3rem; }
+  
+  .m-form { display: flex; flex-direction: column; gap: 2rem; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .field { display: flex; flex-direction: column; gap: 0.8rem; }
+  .field label { font-family: var(--fm); font-size: 0.55rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.15em; }
+  .field input, .field textarea { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 1rem; color: #fff; font-family: var(--fm); font-size: 0.8rem; border-radius: 4px; }
+  .field input:focus { border-color: var(--c1); outline: none; }
+
+  .m-file-input { cursor: pointer; border: 1px dashed var(--border); padding: 2.5rem; text-align: center; border-radius: 4px; transition: all 0.3s; }
+  .m-file-input input { display: none; }
+  .m-file-input span { font-family: var(--fm); font-size: 0.75rem; color: var(--dim); }
+  .m-file-input:hover { border-color: var(--c1); background: rgba(0,255,209,0.02); }
+
+  .modal-footer-alt { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; }
+  .m-back-btn { background: none; border: none; font-family: var(--fm); font-size: 0.7rem; color: var(--dim); cursor: pointer; }
+  .m-back-btn:hover { color: #fff; }
+
+  .m-log { margin-top: 2rem; font-family: var(--fm); font-size: 0.65rem; color: var(--c1); text-align: center; min-height: 1.2em; }
+
+  @media (max-width: 768px) {
+    #job-modal-box { padding: 2rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .modal-meta-row { flex-direction: column; gap: 2rem; }
+  }
+</style>
+
+<script>
+  import { jobs } from '../data/jobs';
+
+  const modal = document.getElementById('job-modal');
+  const modalBox = document.getElementById('job-modal-box');
+  const closeBtn = document.getElementById('job-modal-close');
+  const descLayer = document.getElementById('job-desc-layer');
+  const applyLayer = document.getElementById('job-apply-layer');
+  const applyInitiateBtn = document.getElementById('initiate-apply-btn');
+  const backBtn = document.getElementById('back-to-desc');
+  
+  const titleEl = document.getElementById('modal-title');
+  const deptEl = document.getElementById('modal-dept');
+  const locEl = document.getElementById('modal-loc');
+  const typeEl = document.getElementById('modal-type');
+  const salaryEl = document.getElementById('modal-salary');
+  const textEl = document.getElementById('modal-text');
+  const reqsEl = document.getElementById('modal-reqs');
+  const respsEl = document.getElementById('modal-resps');
+
+  // Open Modal logic
+  window.addEventListener('openJob', ((e: CustomEvent) => {
+    const job = jobs.find(j => j.id === e.detail.id);
+    if (!job) return;
+
+    // Fill content
+    if(titleEl) titleEl.textContent = job.title.toUpperCase();
+    if(deptEl) deptEl.textContent = `// SECTOR: ${job.dept.toUpperCase()}`;
+    if(locEl) locEl.textContent = job.location;
+    if(typeEl) typeEl.textContent = job.type;
+    if(salaryEl) salaryEl.textContent = job.salary;
+    if(textEl) textEl.textContent = job.description;
+    
+    if(reqsEl) {
+      reqsEl.innerHTML = job.requirements.map(r => `<li>${r}</li>`).join('');
+    }
+    if(respsEl) {
+      respsEl.innerHTML = job.responsibilities.map(r => `<li>${r}</li>`).join('');
+    }
+
+    // Reset view
+    descLayer?.classList.remove('hidden');
+    applyLayer?.classList.add('hidden');
+    modal?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }) as any);
+
+  // Close logic
+  const closeModal = () => {
+    modal?.classList.remove('open');
+    document.body.style.overflow = 'auto';
+  };
+  closeBtn?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+  // Layer switching
+  applyInitiateBtn?.addEventListener('click', () => {
+    descLayer?.classList.add('hidden');
+    applyLayer?.classList.remove('hidden');
+    modalBox?.scrollTo(0,0);
+  });
+  backBtn?.addEventListener('click', () => {
+    applyLayer?.classList.add('hidden');
+    descLayer?.classList.remove('hidden');
+  });
+
+  // Form logic
+  const form = document.getElementById('apply-form') as HTMLFormElement;
+  const log = document.getElementById('m-log');
+  const fileInput = document.getElementById('resume-upload') as HTMLInputElement;
+  const fileLabel = document.getElementById('file-status');
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const logEl = document.getElementById('m-form-log');
+      if(logEl) logEl.textContent = '>> TRANSMITTING_ENCRYPTED_INTEL...';
+      
+      await new Promise(r => setTimeout(r, 2000));
+      
+      if(logEl) {
+        logEl.textContent = '>> TRANSMISSION_SUCCESSFUL. IDENTITY_VERIFIED.';
+        logEl.style.color = '#00FF88';
+      }
+      form.reset();
+      if(fileLabel) fileLabel.textContent = 'ATTACH_SOURCE_FILE (PDF)';
+      
+      setTimeout(() => {
+        closeModal();
+        if(logEl) { logEl.textContent = ''; logEl.style.color = ''; }
+      }, 3000);
+    });
+  }
+
+  if (fileInput && fileLabel) {
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files.length > 0) {
+        fileLabel.textContent = `READY: ${fileInput.files[0].name.toUpperCase()}`;
+        fileLabel.style.color = 'var(--c1)';
+      }
+    });
+  }
+</script>
