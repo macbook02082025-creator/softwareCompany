@@ -1,17 +1,99 @@
 :root{
-  --void:#00000A;--deep:#05050F;--surface:#0A0A1C;--lift:#10102A;
-  --border:rgba(255,255,255,0.05);--glass:rgba(255,255,255,0.02);
+  --void:#020205;--deep:#05050F;--surface:#0A0A1C;--lift:#12122A;
+  --border:rgba(255,255,255,0.08);--glass:rgba(255,255,255,0.03);
   --c1:#00FFD1;--c2:#6B17FF;--c3:#FF1F6E;--c4:#1B8EFF;--c5:#FFD100;
-  --text:#F2F2FF;--muted:#46467A;--dim:#1E1E38;
+  --text:#F8F8FF;--muted:#8080A0;--dim:#303050;
   --expo:cubic-bezier(.16,1,.3,1);
   --expo2:cubic-bezier(.22,1,.36,1);
   --spring:cubic-bezier(.34,1.4,.64,1);
   --soft:cubic-bezier(.4,0,.2,1);
   --ff:'Sora',sans-serif;--fd:'Bebas Neue',sans-serif;--fm:'JetBrains Mono',monospace;
 }
+
+/* ═══ MODERN LAYOUT UTILS ═══ */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+}
+.bento-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  transition: transform .6s var(--expo), border-color .4s ease;
+}
+.bento-card:hover {
+  border-color: rgba(0, 255, 209, 0.25);
+  transform: translateY(-5px);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.5) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ═══ ADVANCED SCROLL REVEAL ═══ */
+.rv {
+  opacity: 0;
+  transform: translateY(30px) scale(0.98);
+  filter: blur(10px);
+  transition: opacity 1.2s var(--expo), transform 1.2s var(--expo), filter 1.2s var(--expo);
+}
+.rv.in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* ═══ PERFORMANCE OVERRIDES ═══ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--void);color:var(--text);font-family:var(--ff);overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+html{scroll-behavior:smooth; -webkit-font-smoothing: antialiased;}
+body{background:var(--void);color:var(--text);font-family:var(--ff);overflow-x:hidden; cursor: default;}
+
+/* Ensure View Transitions are smooth */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.6s;
+  animation-timing-function: var(--expo);
+}
+
+/* ═══ NOISE GRAIN ═══ */
+.noise-overlay {
+  position: fixed;
+  inset: -200%;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  animation: noiseAnim 0.2s infinite;
+}
+@keyframes noiseAnim {
+  0% { transform: translate(0,0) }
+  10% { transform: translate(-5%,-5%) }
+  20% { transform: translate(-10%,5%) }
+  30% { transform: translate(5%,-10%) }
+  40% { transform: translate(-5%,15%) }
+  50% { transform: translate(-10%,5%) }
+  60% { transform: translate(15%,0) }
+  70% { transform: translate(0,10%) }
+  80% { transform: translate(-15%,0) }
+  90% { transform: translate(10%,5%) }
+  100% { transform: translate(5%,0) }
+}
+
+/* (rest of the original global.css continues here, but with refined variables) */
 
 /* GPU layers for all animated elements */
 #nav,#spb,.hspan,.rv,.wcard,.team-card,.award-card,.blog-card,.price-card,.flip-inner,.tc,.tm,.av-item,

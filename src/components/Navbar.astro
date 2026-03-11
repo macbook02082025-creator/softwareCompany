@@ -1,72 +1,106 @@
 <!-- NAV -->
-<nav id="nav">
-  <a href="/" class="n-logo">NEXUS</a>
-  <ul class="n-links">
-    <li><a href="/services">Services</a></li>
-    <li><a href="/about">About</a></li>
-    <li><a href="/portfolio">Portfolio</a></li>
-    <li><a href="/blog">Blog</a></li>
-    <li><a href="/careers">Careers</a></li>
-  </ul>
-  <div class="n-right">
-    <div class="n-cmd-btn" id="n-search-btn"><span class="kbd">⌘K</span> Search</div>
-    <a href="#cta" class="n-cta"><span>Start Project ↗</span></a>
-  </div>
-  <div class="n-ham" id="n-ham-btn">
-    <span class="n-hl"></span><span class="n-hl"></span><span class="n-hl"></span>
+<nav id="nav" class="glass-panel">
+  <div class="nav-container">
+    <a href="/" class="n-logo" data-value="NEXUS">NEXUS</a>
+    <ul class="n-links">
+      <li><a href="/services" data-astro-reload>Services</a></li>
+      <li><a href="/about" data-astro-reload>About</a></li>
+      <li><a href="/portfolio" data-astro-reload>Portfolio</a></li>
+      <li><a href="/blog" data-astro-reload>Blog</a></li>
+      <li><a href="/careers" data-astro-reload>Careers</a></li>
+    </ul>
+    <div class="n-right">
+      <button class="n-cmd-btn" id="n-search-btn">
+        <span class="kbd">⌘</span>
+        <span class="kbd">K</span>
+      </button>
+      <a href="#cta" class="n-cta"><span>Initiate ↗</span></a>
+    </div>
+    <div class="n-ham" id="n-ham-btn">
+      <span class="n-hl"></span><span class="n-hl"></span><span class="n-hl"></span>
+    </div>
   </div>
 </nav>
 
-<script>
-const navEl=document.getElementById('nav');
-const searchBtn = document.getElementById('n-search-btn');
-const hamBtn = document.getElementById('n-ham-btn');
-let navSolid=false;
-
-window.addEventListener('scroll',()=>{
-    const sy=window.scrollY;
-    const s=sy>60;
-    if(s!==navSolid){
-        navSolid=s;
-        navEl?.classList.toggle('solid',s);
-    }
-},{passive:true});
-
-searchBtn?.addEventListener('click', () => {
-    window.dispatchEvent(new CustomEvent('toggleCmd'));
-});
-
-hamBtn?.addEventListener('click', () => {
-    window.dispatchEvent(new CustomEvent('openMob'));
-});
-
-// Active Link Logic
-const navLinks = document.querySelectorAll('.n-links a');
-const currentPath = window.location.pathname;
-
-navLinks.forEach(a => {
-  if (a.getAttribute('href') === currentPath) {
-    a.classList.add('active');
+<style>
+  #nav {
+    position: fixed;
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1400px;
+    z-index: 1000;
+    height: 64px;
+    border-radius: 32px;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.6s var(--expo);
   }
-});
+  #nav.solid {
+    top: 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    height: 70px;
+    background: rgba(2, 2, 5, 0.8);
+  }
+  .nav-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .n-logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    color: #fff;
+    text-decoration: none;
+    font-family: var(--fd);
+  }
+  .n-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  @media (max-width: 900px) {
+    .n-links, .n-right .n-cta { display: none; }
+    #nav { width: 95%; padding: 0 1.5rem; }
+  }
+</style>
 
-// Logo Home Link
-const logo = document.querySelector('.n-logo');
-if(logo) logo.setAttribute('href', '/');
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) nav?.classList.add('solid');
+    else nav?.classList.remove('solid');
+  }, { passive: true });
 
-// Text scramble for logo
-const SC='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-function scramble(el: any, orig: string){
-  let f=0;
-  clearInterval(el._si);
-  el._si=setInterval(()=>{
-    f++;
-    el.textContent=orig.split('').map((c,i)=>{
-        if(c===' ')return ' ';
-        return i/orig.length<f/22?c:SC[Math.floor(Math.random()*SC.length)];
-    }).join('');
-    if(f>=22){el.textContent=orig;clearInterval(el._si);}
-  },40);
-}
-document.querySelectorAll('.n-logo').forEach((el: any)=>el.addEventListener('mouseenter',function(this: any){scramble(this,'NEXUS');}));
+  // Text scramble effect for logo
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const logo = document.querySelector(".n-logo") as HTMLElement;
+  
+  if (logo) {
+    logo.onmouseover = event => {
+      let iteration = 0;
+      let interval = setInterval(() => {
+        (event.target as HTMLElement).innerText = (event.target as HTMLElement).innerText
+          .split("")
+          .map((letter, index) => {
+            if(index < iteration) {
+              return (event.target as HTMLElement).dataset.value![index];
+            }
+            return letters[Math.floor(Math.random() * 26)]
+          })
+          .join("");
+        
+        if(iteration >= (event.target as HTMLElement).dataset.value!.length){ 
+          clearInterval(interval);
+        }
+        iteration += 1 / 3;
+      }, 30);
+    }
+  }
 </script>
