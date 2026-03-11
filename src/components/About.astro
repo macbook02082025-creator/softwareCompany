@@ -26,6 +26,25 @@
   </div>
 </section>
 
+<style>
+  .av-card {
+    transition: all 0.5s var(--expo);
+  }
+  .av-card:hover {
+    border-color: rgba(0, 255, 209, 0.3);
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateX(10px) scale(1.02);
+  }
+  .av-card-fill {
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 255, 209, 0.2);
+  }
+  .av-card:hover .av-card-fill {
+    filter: brightness(1.2);
+    box-shadow: 0 0 20px rgba(0, 255, 209, 0.4);
+  }
+</style>
+
 <script>
 document.querySelectorAll('.about-vis').forEach(v=>{
   new IntersectionObserver(entries=>entries.forEach(e=>{

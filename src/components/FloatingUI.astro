@@ -1,12 +1,12 @@
 <!-- FLOAT ORB -->
-<div id="float-orb">
-  <a href="#cta" id="float-orb-btn"><div id="float-orb-ring1"></div><div id="float-orb-ring2"></div>
-    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+<div id="float-orb" class="magnetic-btn">
+  <a href="#cta" id="float-orb-btn" class="glass-panel" style="display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; color: var(--c1); background: rgba(5,5,15,0.6); transition: all 0.4s var(--expo);"><div id="float-orb-ring1"></div><div id="float-orb-ring2"></div>
+    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
   </a>
-  <div id="float-orb-tooltip">Start a project ↗</div>
+  <div id="float-orb-tooltip" class="glass-panel" style="background: rgba(5,5,15,0.8);">Initiate sequence ↗</div>
 </div>
-<div id="cmd-kb-trigger"><span class="kbd">⌘K</span> CMD</div>
-<div id="toast"><div class="ldot"></div><span class="toast-msg"></span></div>
+<div id="cmd-kb-trigger" class="glass-panel"><span class="kbd">⌘K</span> CMD</div>
+<div id="toast" class="glass-panel"><div class="ldot"></div><span class="toast-msg"></span></div>
 
 <script>
 const toastEl=document.getElementById('toast');

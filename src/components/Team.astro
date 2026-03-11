@@ -14,3 +14,28 @@
     </div>
   </div>
 </section>
+
+<style>
+  .team-card {
+    transition: all 0.6s var(--expo);
+  }
+  .team-card:hover .tc-av-bg::after {
+    animation-duration: 1.5s;
+    border-color: var(--c1);
+    box-shadow: 0 0 20px rgba(0, 255, 209, 0.3);
+  }
+  .team-card:hover .tc-avatar-ring {
+    transform: scale(1.05);
+  }
+  .tc-avatar-ring {
+    transition: transform 0.6s var(--spring);
+  }
+  .tc-skill {
+    transition: all 0.3s ease;
+  }
+  .team-card:hover .tc-skill {
+    background: rgba(0, 255, 209, 0.08);
+    border-color: rgba(0, 255, 209, 0.2);
+    color: var(--c1);
+  }
+</style>
