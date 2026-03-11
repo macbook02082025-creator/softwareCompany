@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import '../styles/global.css';
 import Background from '../components/Background.astro';
 import Preloader from '../components/Preloader.astro';
 import Cursor from '../components/Cursor.astro';
@@ -33,9 +32,3 @@ import Footer from '../components/Footer.astro';
     <Footer />
 </BaseLayout>
 
-<script>
-const rvObs=new IntersectionObserver(entries=>entries.forEach(e=>{
-    if(e.isIntersecting) e.target.classList.add('in');
-}),{threshold:.07});
-document.querySelectorAll('.rv').forEach(r=>rvObs.observe(r));
-</script>

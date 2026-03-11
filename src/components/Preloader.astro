@@ -5,7 +5,7 @@
   <div class="pl-status" id="plst">INITIALIZING CORE SYSTEMS</div>
 </div>
 
-<script>
+<script is:inline>
 const STATUSES=['INITIALIZING CORE SYSTEMS','LOADING 3D ASSETS','CALIBRATING SHADERS','WARMING UP ML MODELS','DEPLOYING PRODUCTION BUILD','READY'];
 let lp=0;
 const plf=document.getElementById('plf');
@@ -22,7 +22,6 @@ if (plf && plp && plst && plContainer) {
         plst.textContent='READY';
         setTimeout(()=>{
             plContainer.classList.add('exit');
-            // Dispatch a custom event to notify other components that preloader is done
             window.dispatchEvent(new CustomEvent('preloaderDone'));
         },400);
     }

@@ -14,5 +14,21 @@ const { title = "NEXUS — Engineered for the Future" } = Astro.props;
 </head>
 <body>
     <slot />
+    <script is:inline>
+        const rvObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) e.target.classList.add('in');
+            });
+        }, { threshold: 0.07 });
+
+        function observeRVs() {
+            document.querySelectorAll('.rv').forEach(r => rvObs.observe(r));
+        }
+
+        observeRVs();
+
+        const observer = new MutationObserver(observeRVs);
+        observer.observe(document.body, { childList: true, subtree: true });
+    </script>
 </body>
 </html>

@@ -66,10 +66,3 @@ import Footer from '../components/Footer.astro';
     <Footer />
 </BaseLayout>
 
-<script>
-// Global Scroll Reveal logic
-const rvObs=new IntersectionObserver(entries=>entries.forEach(e=>{
-    if(e.isIntersecting) e.target.classList.add('in');
-}),{threshold:.07});
-document.querySelectorAll('.rv').forEach(r=>rvObs.observe(r));
-</script>
